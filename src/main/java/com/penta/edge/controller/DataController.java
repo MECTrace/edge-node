@@ -79,7 +79,7 @@ public class DataController {
                         .timestamp(timestamp)                       // 데이터 파일 생성 시간
                         .fileType("csv")                            // 데이터 파일 타입
                         .dataType(Integer.valueOf(0))
-                        .securityLevel(Integer.valueOf(1))
+                        .securityLevel(Integer.valueOf(4))
                         .dataPriority(Integer.valueOf(1))
                         .availabilityPolicy(Integer.valueOf(1))
                         .dataSignature(signatureValue)              // 데이터 파일 전자서명 값
