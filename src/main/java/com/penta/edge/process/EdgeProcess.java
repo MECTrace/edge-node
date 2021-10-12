@@ -54,7 +54,7 @@ public class EdgeProcess {
                 .build()
         );
         // (4) 데이터 파일 저장
-       fileManager.saveFileFromVehicle(file);
+       fileManager.saveFileFromVehicle(file, metaData.getDataID());
         // (5) 인증서 저장
         if(sender.equals(Sender.VEHICLE)) {
             // 인증서가 저장될 폴더 확인(or 생성)
