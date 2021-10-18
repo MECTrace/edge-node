@@ -81,13 +81,11 @@ public class DataController {
                 LocalDateTime timestamp = LocalDateTime.parse(dateTimeStr, formatter);
                 */
 
-                // 확장자 포함되어있나 확인? 이대로 저장되면 확장자는 어떻게 저장되나 ?csv로 하드코딩했던부분 확인해서 수정할것
-                //todo
                 String fileName = file.getOriginalFilename();
 
                 // 파일명에서 Timestamp 추출
                 // Sample(1) 대응 : 5.2_Chevolet-Bolt-BMS_02구2392_1G1F76E0XJ4114544_2021-08-01T11_00_00.000
-                Pattern patternWithMs = Pattern.compile("\\d{4}-[01]\\d-[0-3]*T.*\\d[0-2]\\d((_[0-5]\\d)?){2}");
+                Pattern patternWithMs = Pattern.compile("\\d{4}-[01]\\d-[0-9]*T.*\\d[0-2]\\d((_[0-5]\\d)?){2}");
                 // Sample(2) 대응 : 5_1_Hyundai_Ionic2017_34머0364_KMHC051HFHU000615_2021_05_03T13_21
                 Pattern patternWithoutMs = Pattern.compile("(\\d{4}_\\d{2}_\\d{2})[A-Z]+(\\d{2}_\\d{2})");
 
@@ -106,7 +104,7 @@ public class DataController {
                     dateTimeStr = matcher.group();
                     formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd'T'HH_mm");
                 } else {
-                    log.error("파일명에서 유효한 Timestamp를 찾을 수 없음");
+                    throw new Exception("파일명에서 유효한 Timestamp를 찾을 수 없음");
                 }
 
                 LocalDateTime timestamp = LocalDateTime.parse(dateTimeStr, formatter);
