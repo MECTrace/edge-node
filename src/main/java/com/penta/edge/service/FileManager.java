@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 @Service
 @Getter
@@ -43,6 +44,16 @@ public class FileManager {
             Files.createDirectories(pathWithoutFileName);
             makeAllDiretories(pathWithoutFileName.getParent());
         }
+    }
+
+    public boolean isDateTime(String dateTime, String format) {
+
+        return false;
+    }
+
+    public LocalDateTime getLocalDateTimeByString(String dateTimeString)  {
+
+        return null;
     }
 
     private String byteToHex(byte num) {
@@ -84,8 +95,9 @@ public class FileManager {
 
     private Path getSavingPathByDataID(MultipartFile file, Path location, String dataID) {
         String orgName = StringUtils.cleanPath(file.getOriginalFilename());
-        String savedName = orgName.contains(".") ? dataID : dataID + ".csv";
-        return location.resolve(savedName);
+        log.info("저장되는 파일명에 확장자가 포함되어있는지 확인. 포함되어있지 않으면 포함시켜줘야함 : {}", orgName);
+        // String savedName = orgName.contains(".") ? dataID : dataID + ".csv";
+        return location.resolve(orgName);
     }
 
     @SneakyThrows(IOException.class)

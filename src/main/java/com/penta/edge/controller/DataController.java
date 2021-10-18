@@ -19,6 +19,8 @@ import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,7 +46,12 @@ public class DataController {
         X509Certificate certificate = certs[0];
 
         for (int i = 0; i < files.length; i++) {
-            // 수신 데이터 파일명 format Sample : 5_1_Hyundai_Ionic2017_34머0364_KMHC051HFHU000615_2021_05_03T13_21
+
+            /*
+            * 아래 형식의 파일명에서만 동작
+            *  format Sample(1) : 5_1_Hyundai_Ionic2017_34머0364_KMHC051HFHU000615_2021_05_03T13_21
+            *  format Sample(2) : 5.2_Chevolet-Bolt-BMS_02구2392_1G1F76E0XJ4114544_2021-08-01T11_00_00.000
+            * */
 
             MultipartFile file = files[i];
             MultipartFile signatureBytes = signatures[i];   // file배열과 1:1대응되는 전자서명 추출
@@ -61,13 +68,47 @@ public class DataController {
                 // 서명 검증 성공
                 log.info("VERIFIED SIGNATURE");
                 // 파일명에 포함된 데이터 추출을 위해 확장자가 있을 시 제거
+                /*
                 String fileName = file.getOriginalFilename().contains(".") ?
                         file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."))
                         : file.getOriginalFilename();
+                */
 
                 // 파일명에서 Timestamp 추출 : 2021_05_03T13_21 > LocalDateTime으로 변환
+                /*
                 String dateTimeStr = fileName.substring(fileName.length() - 16, fileName.length());
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd'T'HH_mm");
+                LocalDateTime timestamp = LocalDateTime.parse(dateTimeStr, formatter);
+                */
+
+                // 확장자 포함되어있나 확인? 이대로 저장되면 확장자는 어떻게 저장되나 ?csv로 하드코딩했던부분 확인해서 수정할것
+                //todo
+                String fileName = file.getOriginalFilename();
+
+                // 파일명에서 Timestamp 추출
+                // Sample(1) 대응 : 5.2_Chevolet-Bolt-BMS_02구2392_1G1F76E0XJ4114544_2021-08-01T11_00_00.000
+                Pattern patternWithMs = Pattern.compile("\\d{4}-[01]\\d-[0-3]*T.*\\d[0-2]\\d((_[0-5]\\d)?){2}");
+                // Sample(2) 대응 : 5_1_Hyundai_Ionic2017_34머0364_KMHC051HFHU000615_2021_05_03T13_21
+                Pattern patternWithoutMs = Pattern.compile("(\\d{4}_\\d{2}_\\d{2})[A-Z]+(\\d{2}_\\d{2})");
+
+                Matcher matcherMs = patternWithMs.matcher(fileName);
+                Matcher matcher = patternWithoutMs.matcher(fileName);
+
+                String dateTimeStr = "";
+                DateTimeFormatter formatter = null;
+
+                if(matcherMs.find()) {
+                    // 2021-08-01T11_00_00.000
+                    dateTimeStr = matcherMs.group();
+                    formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH_mm_ss.SSS");
+                } else if(matcher.find()) {
+                    // 2021_05_03T13_21
+                    dateTimeStr = matcher.group();
+                    formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd'T'HH_mm");
+                } else {
+                    log.error("파일명에서 유효한 Timestamp를 찾을 수 없음");
+                }
+
                 LocalDateTime timestamp = LocalDateTime.parse(dateTimeStr, formatter);
 
                 String fileHash = fileManager.getHash(file);
