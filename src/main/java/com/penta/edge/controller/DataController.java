@@ -6,6 +6,8 @@ import com.penta.edge.process.EdgeProcess;
 import com.penta.edge.service.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +33,7 @@ public class DataController {
     private final FileManager fileManager;
     private final EdgeProcess edgeProcess;
 
+
     // TODO : 송신자별 URL생성 필요 (/upload/{sender})
     @PostMapping(value = "/upload/vehicle")
     public ResponseEntity<?> getFile(
@@ -54,7 +57,7 @@ public class DataController {
             * */
 
             MultipartFile file = files[i];
-            MultipartFile signatureBytes = signatures[i];   // file배열과 1:1대응되는 전자서명 추출
+            MultipartFile signatureBytes = signatures[i];   // file 배열과 1:1대응되는 전자서명 추출
 
             Signature signature = Signature.getInstance("SHA256withRSA");
             signature.initVerify(certificate.getPublicKey());
@@ -67,22 +70,7 @@ public class DataController {
             if (signature.verify(signatureBytes.getBytes())) {
                 // 서명 검증 성공
                 log.info("VERIFIED SIGNATURE");
-                // 파일명에 포함된 데이터 추출을 위해 확장자가 있을 시 제거
-                /*
-                String fileName = file.getOriginalFilename().contains(".") ?
-                        file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."))
-                        : file.getOriginalFilename();
-                */
-
-                // 파일명에서 Timestamp 추출 : 2021_05_03T13_21 > LocalDateTime으로 변환
-                /*
-                String dateTimeStr = fileName.substring(fileName.length() - 16, fileName.length());
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd'T'HH_mm");
-                LocalDateTime timestamp = LocalDateTime.parse(dateTimeStr, formatter);
-                */
-
                 String fileName = file.getOriginalFilename();
-
                 // 파일명에서 Timestamp 추출
                 // Sample(1) 대응 : 5.2_Chevolet-Bolt-BMS_02구2392_1G1F76E0XJ4114544_2021-08-01T11_00_00.000
                 Pattern patternWithMs = Pattern.compile("\\d{4}-[01]\\d-[0-9]*T.*\\d[0-2]\\d((_[0-5]\\d)?){2}");
@@ -104,7 +92,7 @@ public class DataController {
                     dateTimeStr = matcher.group();
                     formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd'T'HH_mm");
                 } else {
-                    throw new Exception("파일명에서 유효한 Timestamp를 찾을 수 없음");
+                    return new ResponseEntity("파일명에서 유효한 TimeStamp를 찾을 수 없습니다.",HttpStatus.BAD_REQUEST);
                 }
 
                 LocalDateTime timestamp = LocalDateTime.parse(dateTimeStr, formatter);
@@ -131,7 +119,7 @@ public class DataController {
             } else {
                 // 서명이 일치하지 않은 경우
                 log.error("FAILED TO VERIFY");
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("전자서명이 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
             }
         } // end of for
         return new ResponseEntity<>(HttpStatus.OK);
