@@ -95,7 +95,6 @@ public class FileManager {
 
     private Path getSavingPathByDataID(MultipartFile file, Path location, String dataID) {
         String orgName = StringUtils.cleanPath(file.getOriginalFilename());
-        log.info("저장되는 파일명에 확장자가 포함되어있는지 확인. 포함되어있지 않으면 포함시켜줘야함 : {}", orgName);
         // String savedName = orgName.contains(".") ? dataID : dataID + ".csv";
         return location.resolve(orgName);
     }

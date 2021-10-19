@@ -7,6 +7,7 @@ import com.penta.edge.service.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,13 +90,16 @@ public class DataController {
                     formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH_mm_ss.SSS");
                 } else if(matcher.find()) {
                     // 2021_05_03T13_21
-                    dateTimeStr = matcher.group();
-                    formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd'T'HH_mm");
+                    dateTimeStr = matcher.group()+".000";
+                    formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd'T'HH_mm.SSS");
                 } else {
                     return new ResponseEntity("파일명에서 유효한 TimeStamp를 찾을 수 없습니다.",HttpStatus.BAD_REQUEST);
                 }
 
                 LocalDateTime timestamp = LocalDateTime.parse(dateTimeStr, formatter);
+
+                //String tmpTimeStr = LocalDateTime.parse(dateTimeStr, formatter).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+                //LocalDateTime timestamp = LocalDateTime.parse(tmpTimeStr);
 
                 String fileHash = fileManager.getHash(file);
 

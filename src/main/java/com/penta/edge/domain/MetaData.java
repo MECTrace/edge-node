@@ -10,6 +10,7 @@ import org.hibernate.annotations.Check;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.sql.Time;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,8 +26,9 @@ public class MetaData {
     @Id
     private String dataID;
 
-    // 데이터 파일의 생성시간(.csv파일명에 포함된 시간을 파싱)
+    // 데이터 파일의 생성시간(파일명에 포함된 시간을 파싱)
     @Column(nullable = false)
+    @Convert(converter= TimeToStringConverter.class)
     private LocalDateTime timestamp;
 
     // 데이터 파일 타입(csv)
