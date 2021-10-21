@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "file_management")
+@Table(name = "fileManagement")
 public class MetaData {
 
     // 데이터 파일의 해시값
