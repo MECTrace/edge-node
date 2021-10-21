@@ -47,10 +47,10 @@ public class EdgeProcess {
         metaDataService.save(metaData);
         // (3) HashTable 저장
         hashService.save(Hash.builder()
-                .sourceID(sender.getValue()+pubKeyEncoded)        // 데이터 파일 송신자
-                .dataID(metaData.getDataID())                     // 데이터 파일의 해시값
-                .destinationID(edgeInfo.getName())                // 데이터 파일 수신자
-                .timestamp(receivingTime)                         // 수신 시간
+                .sourceID(sender.getValue()+pubKeyEncoded)                 // 데이터 파일 송신자
+                .dataID(metaData.getDataID())                              // 데이터 파일의 해시값
+                .destinationID(Sender.NODE.getValue()+edgeInfo.getName())  // 데이터 파일 수신자
+                .timestamp(receivingTime)                                  // 수신 시간
                 .build()
         );
         // (4) 데이터 파일 저장
