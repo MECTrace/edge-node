@@ -24,19 +24,20 @@ public class MetaData {
 
     // 데이터 파일의 해시값
     @Id
+    @Column(name = "dataID")
     private String dataID;
 
     // 데이터 파일의 생성시간(파일명에 포함된 시간을 파싱)
-    @Column(nullable = false)
+    @Column(name="timestamp", nullable = false)
     @Convert(converter= TimeToStringConverter.class)
     private LocalDateTime timestamp;
 
     // 데이터 파일 타입(csv)
-    @Column(nullable = false)
+    @Column(name="fileType", nullable = false)
     private String fileType;
 
     // 0:데이터 원본 보유, 1:링크를 통한 간접 접근
-    @Column(nullable = false)
+    @Column(name="dataType", nullable = false)
     @Min(0)
     @Max(1)
     private Integer dataType;
@@ -50,25 +51,25 @@ public class MetaData {
     * *1~4등급은 데이터 추적 지원 / 5등급은 미지원
     *
     * */
-    @Column(nullable = false)
+    @Column(name="securityLevel", nullable = false)
     @Min(1)
     @Max(5)
     private Integer securityLevel;
 
     // 데이터 중요도
-    @Column(nullable = false)
+    @Column(name="dataPriority", nullable = false)
     @Min(1)
     @Max(5)
     private Integer dataPriority;
 
     // 데이터 가용성 확보 정책
-    @Column(nullable = false)
+    @Column(name="availabilityPolicy", nullable = false)
     @Min(1)
     @Max(2)
     private Integer availabilityPolicy;
 
     // 데이터 파일 전자서명 값
-    @Column(length=2000)
+    @Column(name="dataSignature", length=2000)
     private String dataSignature;
 
     /*
@@ -76,17 +77,19 @@ public class MetaData {
      * TYPE : Vehicle, Node, Central, User
      * ID : Vehicle or User - 인증서의 Public key / Node or Central - uuid
     * */
-    @Column(nullable = false, length = 4000)
+    @Column(name="cert", nullable = false, length = 4000)
     private String cert;
 
     // 데이터 파일 저장 위치(dataType = 1 인경우 NULL)
+    @Column(name="directory")
     private String directory;
 
     // 데이터 파일 원본을 소유하고 있는 Edge Noded의 UUID
+    @Column(name="linked_edge")
     private String linkedEdge;
 
     // 데이터 파일 크기
-    @Column(nullable = false)
+    @Column(name="dataSize", nullable = false)
     private Long dataSize;
 
 }
