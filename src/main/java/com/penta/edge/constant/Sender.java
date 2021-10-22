@@ -1,10 +1,10 @@
 package com.penta.edge.constant;
 
 public enum Sender {
-    VEHICLE("0x01"),
-    NODE("0x02"),
-    CENTRAL("0x03"),
-    USER("0x04");
+    VEHICLE("01"),
+    NODE("02"),
+    CENTRAL("03"),
+    USER("04");
 
     private final String value;
 
