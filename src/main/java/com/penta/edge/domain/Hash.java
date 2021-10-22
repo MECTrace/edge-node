@@ -19,7 +19,7 @@ public class Hash {
 
     // 데이터 파일의 해시값
     @Id
-    @Column(name = "dataID")
+    @Column(name = "dataid")
     private String dataID;
 
     // 데이터 파일 수신 시간(데이터를 수신한 서버시간)
@@ -33,7 +33,7 @@ public class Hash {
     *      Edge & Central - UUID
     * ex : 0x010000daaaadddd....
     * */
-    @Column(name="sourceID", nullable = false, length = 2000)
+    @Column(name="sourceid", nullable = false, length = 2000)
     private String sourceID;
 
     /*
@@ -43,7 +43,7 @@ public class Hash {
      *      Edge & Central - UUID
      * * ex : 0x020000daaaadddd....
      * */
-    @Column(name = "destinationID", nullable = false, length = 2000)
+    @Column(name = "destinationid", nullable = false, length = 2000)
     private String destinationID;
 
 

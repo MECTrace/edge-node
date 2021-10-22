@@ -24,20 +24,20 @@ public class MetaData {
 
     // 데이터 파일의 해시값
     @Id
-    @Column(name = "dataID")
+    @Column(name = "dataid")
     private String dataID;
 
     // 데이터 파일의 생성시간(파일명에 포함된 시간을 파싱)
-    @Column(name="timestamp", nullable = false)
-    @Convert(converter= TimeToStringConverter.class)
+    @Column(name="timestamp", nullable = false, columnDefinition = "datetime(6)")
+    // @Convert(converter= TimeToStringConverter.class)
     private LocalDateTime timestamp;
 
     // 데이터 파일 타입(csv)
-    @Column(name="fileType", nullable = false)
+    @Column(name="file_type", nullable = false)
     private String fileType;
 
     // 0:데이터 원본 보유, 1:링크를 통한 간접 접근
-    @Column(name="dataType", nullable = false)
+    @Column(name="data_type", nullable = false)
     @Min(0)
     @Max(1)
     private Integer dataType;
@@ -51,25 +51,25 @@ public class MetaData {
     * *1~4등급은 데이터 추적 지원 / 5등급은 미지원
     *
     * */
-    @Column(name="securityLevel", nullable = false)
+    @Column(name="security_level", nullable = false)
     @Min(1)
     @Max(5)
     private Integer securityLevel;
 
     // 데이터 중요도
-    @Column(name="dataPriority", nullable = false)
+    @Column(name="data_priority", nullable = false)
     @Min(1)
     @Max(5)
     private Integer dataPriority;
 
     // 데이터 가용성 확보 정책
-    @Column(name="availabilityPolicy", nullable = false)
+    @Column(name="availability_policy", nullable = false)
     @Min(1)
     @Max(2)
     private Integer availabilityPolicy;
 
     // 데이터 파일 전자서명 값
-    @Column(name="dataSignature", length=2000)
+    @Column(name="data_signature", length=2000)
     private String dataSignature;
 
     /*
@@ -89,7 +89,7 @@ public class MetaData {
     private String linkedEdge;
 
     // 데이터 파일 크기
-    @Column(name="dataSize", nullable = false)
+    @Column(name="data_size", nullable = false)
     private Long dataSize;
 
 }
