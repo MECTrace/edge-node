@@ -15,7 +15,7 @@ public class EdgeApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(EdgeApplication.class, args);
-        Spreading sp = new Spreading(new EdgeInfo(new EdgeInfoProperties("uuidtest")));
+        Spreading sp = new Spreading(new EdgeInfo(new EdgeInfoProperties("9dc00904-2945-45a8-8aa3-9fe968894292")));
         sp.getDeviceInfo();
 
     }

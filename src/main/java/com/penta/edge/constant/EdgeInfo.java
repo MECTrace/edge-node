@@ -19,7 +19,7 @@ public class EdgeInfo {
 
     private final String name;
     private final String IP;
-    private final int TCP_PORT = 11111;
+    private final int TCP_PORT = 16300;
 
     @SneakyThrows
     public EdgeInfo(EdgeInfoProperties edgeInfoProperties) {

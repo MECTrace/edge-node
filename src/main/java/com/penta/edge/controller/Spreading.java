@@ -44,7 +44,9 @@ public class Spreading {
             System.out.println("응답---------");
             System.out.println(br.readLine());
         } catch (IOException e) {
+            System.out.println("연결실패");
             System.out.println(e.getMessage());
+            e.printStackTrace();
         } finally {
             // 소켓 닫기 (연결 끊기)
             try {
