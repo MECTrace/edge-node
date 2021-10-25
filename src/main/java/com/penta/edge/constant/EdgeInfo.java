@@ -19,7 +19,7 @@ public class EdgeInfo {
 
     private final String name;
     private final String IP;
-    private final int TCP_PORT = 16300;
+    private final int TCP_PORT = 163000;
 
     @SneakyThrows
     public EdgeInfo(EdgeInfoProperties edgeInfoProperties) {
@@ -29,6 +29,7 @@ public class EdgeInfo {
         log.info("UUID(name) :: {}", this.name);
         log.info("SERVER IP :: {}", this.IP);
         log.info("TCP_PORT :: {}", this.TCP_PORT);
+        log.info("------- Edge Information -------");
     }
 
 }
