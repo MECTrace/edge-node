@@ -29,7 +29,7 @@ public class Spreading {
 
         try {
             // 서버에 요청 보내기
-            socket = new Socket(edgeInfo.getIP(), edgeInfo.getTCP_PORT());
+            socket = new Socket("10.0.7.11", edgeInfo.getTCP_PORT());
             System.out.println(socket.getInetAddress().getHostAddress() + "에 연결됨");
 
             // 메시지 받기
@@ -37,7 +37,7 @@ public class Spreading {
             pw = new PrintWriter(socket.getOutputStream());
 
             // 메세지 전달
-            pw.println("{[{REQ::192.168.0.10::001:: EDGE_LIST}]}");
+            pw.println("{[{REQ::10.0.7.11::001:: EDGE_LIST}]}");
             pw.flush();
 
             // 응답 출력
