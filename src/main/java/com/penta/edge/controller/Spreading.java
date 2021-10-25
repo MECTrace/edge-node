@@ -29,7 +29,7 @@ public class Spreading {
 
         try {
             // 서버에 요청 보내기
-            socket = new Socket("10.0.7.11", edgeInfo.getTCP_PORT());
+            socket = new Socket(edgeInfo.getIP(), edgeInfo.getTCP_PORT());
             System.out.println(socket.getInetAddress().getHostAddress() + "에 연결됨");
 
             // 메시지 받기
