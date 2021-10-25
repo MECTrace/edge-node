@@ -6,8 +6,6 @@ import com.penta.edge.process.EdgeProcess;
 import com.penta.edge.service.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +31,6 @@ public class DataController {
 
     private final FileManager fileManager;
     private final EdgeProcess edgeProcess;
-
 
     // TODO : 송신자별 URL생성 필요 (/upload/{sender})
     @PostMapping(value = "/upload/vehicle")
@@ -90,8 +87,8 @@ public class DataController {
                     formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH_mm_ss.SSS");
                 } else if(matcher.find()) {
                     // 2021_05_03T13_21
-                    dateTimeStr = matcher.group()+".000";
-                    formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd'T'HH_mm.SSS");
+                    dateTimeStr = matcher.group()+"_00.000";
+                    formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd'T'HH_mm_ss.SSS");
                 } else {
                     return new ResponseEntity("파일명에서 유효한 TimeStamp를 찾을 수 없습니다.",HttpStatus.BAD_REQUEST);
                 }
