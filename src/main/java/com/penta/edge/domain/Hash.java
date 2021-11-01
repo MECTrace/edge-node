@@ -1,12 +1,12 @@
 package com.penta.edge.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.bind.Name;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Slf4j
 @Table(name = "tracing_history")
+@Setter
+@Getter
 public class Hash {
 
     // 데이터 파일의 해시값
@@ -47,4 +49,13 @@ public class Hash {
     private String destinationID;
 
 
+    @Override
+    public String toString() {
+        return "Hash{" +
+                "dataID='" + dataID + '\'' +
+                ", timestamp=" + timestamp +
+                ", sourceID='" + sourceID + '\'' +
+                ", destinationID='" + destinationID + '\'' +
+                '}';
+    }
 }

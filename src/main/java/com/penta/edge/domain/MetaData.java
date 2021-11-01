@@ -1,16 +1,14 @@
 package com.penta.edge.domain;
 
 
-import com.penta.edge.constant.AvailabilityPolicy;
-import com.penta.edge.constant.DataPriority;
-import com.penta.edge.constant.SecurityLevel;
 import lombok.*;
-import org.hibernate.annotations.Check;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.sql.Time;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "fileManagement")
+
 public class MetaData {
 
     // 데이터 파일의 해시값
@@ -92,4 +91,21 @@ public class MetaData {
     @Column(name="data_size", nullable = false)
     private Long dataSize;
 
+    @Override
+    public String toString() {
+        return "MetaData{" +
+                "dataID='" + dataID + '\'' +
+                ", timestamp=" + timestamp +
+                ", fileType='" + fileType + '\'' +
+                ", dataType=" + dataType +
+                ", securityLevel=" + securityLevel +
+                ", dataPriority=" + dataPriority +
+                ", availabilityPolicy=" + availabilityPolicy +
+                ", dataSignature='" + dataSignature + '\'' +
+                ", cert='" + cert + '\'' +
+                ", directory='" + directory + '\'' +
+                ", linkedEdge='" + linkedEdge + '\'' +
+                ", dataSize=" + dataSize +
+                '}';
+    }
 }

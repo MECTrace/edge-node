@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+
 @RequiredArgsConstructor
 @Slf4j
 @Component
@@ -37,7 +38,7 @@ public class Spreading {
             pw = new PrintWriter(socket.getOutputStream());
 
             // 메세지 전달
-            pw.println("{[{REQ::10.0.7.11::001:: EDGE_LIST}]}");
+            pw.println("{[{REQ::10.2.0.7::001:: EDGE_LIST}]}");
             pw.flush();
 
             // 응답 출력
@@ -59,6 +60,4 @@ public class Spreading {
         }
 
     }
-
-
 }

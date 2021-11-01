@@ -2,8 +2,6 @@ package com.penta.edge;
 
 import com.penta.edge.configuration.EdgeInfoProperties;
 import com.penta.edge.configuration.FileUploadProperties;
-import com.penta.edge.constant.EdgeInfo;
-import com.penta.edge.controller.Spreading;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,8 +13,6 @@ public class EdgeApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(EdgeApplication.class, args);
-        Spreading sp = new Spreading(new EdgeInfo(new EdgeInfoProperties("9dc00904-2945-45a8-8aa3-9fe968894292")));
-        sp.getDeviceInfo();
 
     }
 

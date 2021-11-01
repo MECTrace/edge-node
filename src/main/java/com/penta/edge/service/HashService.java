@@ -11,8 +11,8 @@ public class HashService {
 
     private final HashRepository hashRepository;
 
-    public void save(Hash hash) {
-        hashRepository.save(hash);
+    public Hash save(Hash hash) {
+        return hashRepository.save(hash);
     }
 
 }
