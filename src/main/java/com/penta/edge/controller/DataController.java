@@ -1,15 +1,19 @@
 package com.penta.edge.controller;
 
-import com.penta.edge.constant.Sender;
+import com.penta.edge.constant.EdgeInfo;
 import com.penta.edge.domain.Hash;
 import com.penta.edge.domain.MetaData;
+import com.penta.edge.domain.RequestDto;
 import com.penta.edge.process.EdgeProcess;
 import com.penta.edge.service.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +32,7 @@ public class DataController {
 
     private final FileManager fileManager;
     private final EdgeProcess edgeProcess;
+    private final EdgeInfo edgeInfo;
 
     // TODO : 송신자별 URL생성 필요 (/upload/{sender})
     @PostMapping(value = "/upload/vehicle")
@@ -98,7 +103,7 @@ public class DataController {
                 String fileHash = fileManager.getHash(file);
 
                 // Meta data 생성 및 DB저장(Meta Data, Hash Table)
-                edgeProcess.saveMetaDataNHashTable(file, certificate, Sender.VEHICLE, receivingTime,
+                edgeProcess.saveMetaHashFromVehicle(file, certificate, receivingTime,
                         MetaData.builder()
                         .dataID(fileHash)                           // 데이터 파일의 해시 값
                         .timestamp(timestamp)                       // 데이터 파일 생성 시간
@@ -125,20 +130,27 @@ public class DataController {
 
 
     @PostMapping(value = "/upload/edge")
-    public ResponseEntity<?> getFile(@RequestParam("datafile") MultipartFile[] files,
-                                     @ModelAttribute("metadata") MetaData metaData,
-                                     @ModelAttribute("hashtable") Hash hash,
-                                     HttpServletRequest request)
-    {
+    public ResponseEntity<?> getFile(RequestDto req, HttpServletRequest request) {
 
-        log.info("--------전송확인");
+        // TODO : edge to edge 데이터 보낼 때 전체 object에 대한 전자서명 적용 후 인증서로 검증하는 과정 추가 필요(HttpServletRequest에서 추출)
 
+        // 데이터 수신시간 Timestamp
+        LocalDateTime receivingTime = LocalDateTime.now();
 
+        // metadata > 그대로 저장
+        MetaData metaData = req.getMetadata().toMetaData();
 
+        // tracing history > 송신자(보낸edge), 수신자(본edge) uuid 세팅
+        Hash hash = Hash.builder()
+                .dataID(req.getHash().getDataID())
+                .timestamp(receivingTime)
+                .sourceID(req.getUuid())
+                .destinationID(edgeInfo.getName())
+                .build();
 
-        return null;
-
+        // LIST로 받지만 인덱스는 1개임.
+        edgeProcess.saveMetaHashFromEdge(req.getDatafile().get(0), req.getCertfile().get(0), metaData, hash);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 }
