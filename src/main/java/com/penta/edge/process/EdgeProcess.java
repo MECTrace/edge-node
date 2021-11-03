@@ -98,7 +98,14 @@ public class EdgeProcess {
 
     @Transactional
     @SneakyThrows
-    public void saveMetaHashFromEdge(MultipartFile datafile, MultipartFile vehicleCertFile, MetaData metaData, Hash hash) {
+    public void saveMetaHashFromEdge(LocalDateTime receivingTime, String uuid, MultipartFile datafile, MultipartFile vehicleCertFile, MetaData metaData) {
+
+        Hash hash = Hash.builder()
+                .sourceID(Sender.NODE.getValue()+uuid)                       // 데이터 파일 송신자
+                .dataID(metaData.getDataID())                                // 데이터 파일의 해시값
+                .destinationID(Sender.NODE.getValue() + edgeInfo.getName())  // 데이터 파일 수신자
+                .timestamp(receivingTime)                                    // 수신 시간
+                .build();
 
         hashService.save(hash);
         metaDataService.save(metaData);

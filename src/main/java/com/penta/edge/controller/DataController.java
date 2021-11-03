@@ -140,16 +140,8 @@ public class DataController {
         // metadata > 그대로 저장
         MetaData metaData = req.getMetadata().toMetaData();
 
-        // tracing history > 송신자(보낸edge), 수신자(본edge) uuid 세팅
-        Hash hash = Hash.builder()
-                .dataID(req.getHash().getDataID())
-                .timestamp(receivingTime)
-                .sourceID(req.getUuid())
-                .destinationID(edgeInfo.getName())
-                .build();
-
         // LIST로 받지만 인덱스는 1개임.
-        edgeProcess.saveMetaHashFromEdge(req.getDatafile().get(0), req.getCertfile().get(0), metaData, hash);
+        edgeProcess.saveMetaHashFromEdge(receivingTime, req.getUuid(), req.getDatafile().get(0), req.getCertfile().get(0), metaData);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
