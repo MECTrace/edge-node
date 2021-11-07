@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class MetaDataDto {
 
 
-    private String dataID;
+    private String dataId;
 
     private LocalDateTime timestamp;
 
@@ -37,7 +37,7 @@ public class MetaDataDto {
 
     public MetaData toMetaData() {
         return MetaData.builder()
-                .dataID(this.dataID)
+                .dataId(this.dataId)
                 .timestamp(this.timestamp)
                 .fileType(this.fileType)
                 .dataType(this.dataType)

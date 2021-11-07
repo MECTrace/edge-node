@@ -1,5 +1,10 @@
 package com.penta.edge.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,10 +27,13 @@ public class Hash {
     // 데이터 파일의 해시값
     @Id
     @Column(name = "dataid")
-    private String dataID;
+    private String dataId;
 
     // 데이터 파일 수신 시간(데이터를 수신한 서버시간)
     @Column(name = "timestamp",nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime timestamp;
 
     /*
@@ -36,7 +44,7 @@ public class Hash {
     * ex : 0x010000daaaadddd....
     * */
     @Column(name="sourceid", nullable = false, length = 2000)
-    private String sourceID;
+    private String sourceId;
 
     /*
      * 데이터 파일 수신자(TYPE+ID)
@@ -46,16 +54,16 @@ public class Hash {
      * * ex : 0x020000daaaadddd....
      * */
     @Column(name = "destinationid", nullable = false, length = 2000)
-    private String destinationID;
+    private String destinationId;
 
 
     @Override
     public String toString() {
         return "Hash{" +
-                "dataID='" + dataID + '\'' +
+                "dataId='" + dataId + '\'' +
                 ", timestamp=" + timestamp +
-                ", sourceID='" + sourceID + '\'' +
-                ", destinationID='" + destinationID + '\'' +
+                ", sourceId='" + sourceId + '\'' +
+                ", destinationId='" + destinationId + '\'' +
                 '}';
     }
 }

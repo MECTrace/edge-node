@@ -1,6 +1,11 @@
 package com.penta.edge.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -24,10 +29,13 @@ public class MetaData {
     // 데이터 파일의 해시값
     @Id
     @Column(name = "dataid")
-    private String dataID;
+    private String dataId;
 
     // 데이터 파일의 생성시간(파일명에 포함된 시간을 파싱)
     @Column(name="timestamp", nullable = false, columnDefinition = "datetime(6)")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSSSSS")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     // @Convert(converter= TimeToStringConverter.class)
     private LocalDateTime timestamp;
 
@@ -94,7 +102,7 @@ public class MetaData {
     @Override
     public String toString() {
         return "MetaData{" +
-                "dataID='" + dataID + '\'' +
+                "dataId='" + dataId + '\'' +
                 ", timestamp=" + timestamp +
                 ", fileType='" + fileType + '\'' +
                 ", dataType=" + dataType +

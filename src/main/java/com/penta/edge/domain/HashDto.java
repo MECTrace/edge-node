@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 @Setter
 public class HashDto {
 
-    private String dataID;
+    private String dataId;
 
     private LocalDateTime timestamp;
 
-    private String sourceID;
+    private String sourceId;
 
-    private String destinationID;
+    private String destinationId;
 
 
 

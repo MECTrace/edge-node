@@ -1,7 +1,6 @@
 package com.penta.edge.controller;
 
 import com.penta.edge.constant.EdgeInfo;
-import com.penta.edge.domain.Hash;
 import com.penta.edge.domain.MetaData;
 import com.penta.edge.domain.RequestDto;
 import com.penta.edge.process.EdgeProcess;
@@ -105,7 +104,7 @@ public class DataController {
                 // Meta data 생성 및 DB저장(Meta Data, Hash Table)
                 edgeProcess.saveMetaHashFromVehicle(file, certificate, receivingTime,
                         MetaData.builder()
-                        .dataID(fileHash)                           // 데이터 파일의 해시 값
+                        .dataId(fileHash)                           // 데이터 파일의 해시 값
                         .timestamp(timestamp)                       // 데이터 파일 생성 시간
                         .fileType("csv")                            // 데이터 파일 타입
                         .dataType(Integer.valueOf(0))
@@ -144,5 +143,6 @@ public class DataController {
         edgeProcess.saveMetaHashFromEdge(receivingTime, req.getUuid(), req.getDatafile().get(0), req.getCertfile().get(0), metaData);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
 }
