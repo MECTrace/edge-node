@@ -41,7 +41,6 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.Random;
 
 @Service
@@ -78,7 +77,7 @@ public class EdgeProcess {
         // (3) HashTable 저장
 
         Hash hash = Hash.builder()
-                .sourceId(Sender.VEHICLE.getValue()+pubKeyEncoded)           // 데이터 파일 송신자
+                .sourceId(Sender.VEHICLE.getValue() + pubKeyEncoded)           // 데이터 파일 송신자
                 .dataId(metaData.getDataId())                                // 데이터 파일의 해시값
                 .destinationId(Sender.NODE.getValue() + edgeInfo.getName())  // 데이터 파일 수신자
                 .timestamp(receivingTime)                                    // 수신 시간
@@ -93,21 +92,25 @@ public class EdgeProcess {
         fileManager.makeAllDiretories(fileManager.getSavingVehicleCertPath());
         Path certfilePath = Files.write(certPath, getCertString(certificate).getBytes());  // 인증서 저장
 
-        // TODO :: (임시)파일 받자마자 edge로 전송하는 프로세스
+
         Random random = new Random();
-        EdgeNode edgeNode;
-        while (true) {
+        EdgeNode[] edgeNode = new EdgeNode[2];
+        int idx = 0;
+        while (idx <= 1) {
             EdgeNode edge = EdgeNode.values()[random.nextInt(4)];
             if (!edge.getIP().equals(edgeInfo.getIP())) {
-                edgeNode = edge;
-                break;
+                if(idx == 0 ||(idx == 1 && !edgeNode[0].getIP().equals(edge.getIP()))) {
+                    edgeNode[idx] = edge;
+                    idx++;
+                }
             }
         }
 
-        // [TODO] 임시 :: device에서 데이터를 받자마자 임의의 Edge로 전송
-        // sendToEdge(edgeNode, filePath, certfilePath.toString(), metaData, hash);
+        // MEMO :: device에서 데이터를 받자마자 임의의 Edge 2개로 전송
+        sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
+        sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
 
-        // [TODO] 임시 :: device에서 데이터를 받자마자 central cloud로 전송
+        // MEMO :: device에서 데이터를 받자마자 central(Auth)로 전송
         sendFilesToCentral(filePath, certfilePath.toString(), metaData, hash);
 
     }
@@ -120,7 +123,7 @@ public class EdgeProcess {
     public void saveMetaHashFromEdge(LocalDateTime receivingTime, String uuid, MultipartFile datafile, MultipartFile vehicleCertFile, MetaData metaData) {
 
         Hash hash = Hash.builder()
-                .sourceId(Sender.NODE.getValue()+uuid)                       // 데이터 파일 송신자
+                .sourceId(Sender.NODE.getValue() + uuid)                     // 데이터 파일 송신자
                 .dataId(metaData.getDataId())                                // 데이터 파일의 해시값
                 .destinationId(Sender.NODE.getValue() + edgeInfo.getName())  // 데이터 파일 수신자
                 .timestamp(receivingTime)                                    // 수신 시간
@@ -138,7 +141,7 @@ public class EdgeProcess {
         // TODO :: 모든 엣지의 디렉토리구조가 동일하다는 가정(동일하지 않을 경우 수정 필요. metadata의 cert, directory가 변경될 수 있음)
         Files.copy(vehicleCertFile.getInputStream(), Paths.get(metaData.getCert()), StandardCopyOption.REPLACE_EXISTING);
 
-        // [TODO] 임시 :: edge to edge로 전송된 파일은 history tracking을 위해 hashtabl만 central로 전송
+        // MEMO :: edge to edge로 전송된 파일은 history tracking을 위해 hashtabl만 central로 전송
         sendHashToCentral(hash);
     }
 
@@ -174,13 +177,16 @@ public class EdgeProcess {
 
     }
 
+
     @SneakyThrows
     public void sendFilesToCentral(String dataFilePath, String certFilePath, MetaData metaData, Hash hash) {
+
+        log.info("------ sendFilesToCentral start ------");
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        MultiValueMap<String, Object> body= new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
         // file[] : [0]-datafile, [1]-certfile, [2]-metadata, [3]-hash 순서 중요
 
@@ -189,27 +195,33 @@ public class EdgeProcess {
         File datafile = new File(dataFilePath);
         File certfile = new File(certFilePath);
 
-        byte[] meta = objectMapper.writeValueAsString(metaData).getBytes(StandardCharsets.UTF_8);
-        byte[] hashtable = objectMapper.writeValueAsString(hash).getBytes(StandardCharsets.UTF_8);
+        // byte[] meta = objectMapper.writeValueAsString(metaData).getBytes(StandardCharsets.UTF_8);
+        // byte[] hashtable = objectMapper.writeValueAsString(hash).getBytes(StandardCharsets.UTF_8);
+
+        String metaJson = objectMapper.writeValueAsString(metaData);
+        String hashJson = objectMapper.writeValueAsString(hash);
 
         body.add("file", new FileSystemResource(datafile));
         body.add("file", new FileSystemResource(certfile));
-        body.add("file", new ByteArrayResource(meta));
-        body.add("file", new ByteArrayResource(hashtable));
+
+        body.add("metadata", metaJson);
+        body.add("hashtable", hashJson);
 
         body.add("signature", getSignatureResource(datafile));
         body.add("signature", getSignatureResource(certfile));
-        body.add("signature", getSignatureResource(meta));
-        body.add("signature", getSignatureResource(hashtable));
+        body.add("signature", getSignatureResource(metaJson));
+        body.add("signature", getSignatureResource(hashJson));
 
-        HttpEntity<MultiValueMap<String,Object>> requestEntity = new HttpEntity<>(body, header);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, header);
 
         // TODO :: central ip,port 확인후 변경 필요
+        // String centralUrl = "https://20.196.220.98:8443/api/central/add/data/auth";
         String centralUrl = "https://127.0.0.1:8089/api/central/add/data/auth";
 
         ResponseEntity<String> response = restTemplate.postForEntity(centralUrl, requestEntity, String.class);
 
-        log.info("response :: {}", response);
+        log.info("sendFilesToCentral(Auth) response :: {}", response);
+        log.info("------ sendFilesToCentral end ------");
         /*
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -241,23 +253,25 @@ public class EdgeProcess {
     public void sendHashToCentral(Hash hash) {
 
         HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        header.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        String centralUrl = "http://20.196.220.98:80/api/tracking/add/item";
-
-        MultiValueMap<String, Object> body= new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
 
-        body.add("hashtable", objectMapper.writeValueAsString(hash));
+        String hashJson = objectMapper.writeValueAsString(hash);
 
-        HttpEntity<MultiValueMap<String,Object>> requestEntity = new HttpEntity<>(body, header);
+        body.add("hashtable", hashJson);
+        body.add("signature", getSignatureResource(hashJson));
 
-        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, header);
+
+        // TODO :: central ip,port 확인후 변경 필요
+        //String centralUrl = "https://20.196.220.98:8443/api/central/add/item/auth";
+        String centralUrl = "https://127.0.0.1:8089/api/central/add/item/auth";
 
         ResponseEntity<String> response = restTemplate.postForEntity(centralUrl, requestEntity, String.class);
 
-        log.info("hash to central cloud :: 응답 :: {} ", response);
+        log.info("sendHashToCentral(Auth) response :: {} ", response);
 
     }
 
@@ -315,7 +329,31 @@ public class EdgeProcess {
         // * Getter 필요
         ByteArrayResource resource = new ByteArrayResource(digitalSignature) {
             @Override
-            public String getFilename() { return "signature"; }
+            public String getFilename() {
+                return "signature";
+            }
+        };
+
+        return resource;
+
+    }
+
+    @SneakyThrows
+    private ByteArrayResource getSignatureResource(String string) {
+
+        // 서명
+        Signature signature = Signature.getInstance("SHA256withRSA");
+        signature.initSign(getPrivateKey());
+
+        signature.update(string.getBytes(StandardCharsets.UTF_8));
+        byte[] digitalSignature = signature.sign();
+
+        // * Getter 필요
+        ByteArrayResource resource = new ByteArrayResource(digitalSignature) {
+            @Override
+            public String getFilename() {
+                return "signature";
+            }
         };
 
         return resource;
@@ -336,7 +374,9 @@ public class EdgeProcess {
         // * Getter 필요
         ByteArrayResource resource = new ByteArrayResource(digitalSignature) {
             @Override
-            public String getFilename() { return "signature"; }
+            public String getFilename() {
+                return "signature";
+            }
         };
 
         return resource;
