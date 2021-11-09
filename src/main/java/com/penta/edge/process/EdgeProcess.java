@@ -215,8 +215,8 @@ public class EdgeProcess {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, header);
 
         // TODO :: central ip,port 확인후 변경 필요
-        // String centralUrl = "https://20.196.220.98:8443/api/central/add/data/auth";
-        String centralUrl = "https://127.0.0.1:8089/api/central/add/data/auth";
+        String centralUrl = "https://20.196.220.98:8443/api/central/add/data/auth";
+        // String centralUrl = "https://127.0.0.1:8089/api/central/add/data/auth";
 
         ResponseEntity<String> response = restTemplate.postForEntity(centralUrl, requestEntity, String.class);
 
@@ -266,8 +266,8 @@ public class EdgeProcess {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, header);
 
         // TODO :: central ip,port 확인후 변경 필요
-        //String centralUrl = "https://20.196.220.98:8443/api/central/add/item/auth";
-        String centralUrl = "https://127.0.0.1:8089/api/central/add/item/auth";
+        String centralUrl = "https://20.196.220.98:8443/api/central/add/item/auth";
+        // String centralUrl = "https://127.0.0.1:8089/api/central/add/item/auth";
 
         ResponseEntity<String> response = restTemplate.postForEntity(centralUrl, requestEntity, String.class);
 
