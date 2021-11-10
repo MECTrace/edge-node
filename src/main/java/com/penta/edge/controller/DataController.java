@@ -40,6 +40,8 @@ public class DataController {
             @RequestParam("signature") MultipartFile[] signatures,
             HttpServletRequest request) throws Exception {
 
+        log.info("**************** DEVICE DIRECT **************** ");
+
         // 데이터 수신시간 Timestamp
         LocalDateTime receivingTime = LocalDateTime.now();
 
@@ -130,6 +132,8 @@ public class DataController {
 
     @PostMapping(value = "/upload/edge")
     public ResponseEntity<?> getFile(RequestDto req, HttpServletRequest request) {
+
+        log.info("**************** FROM EDGE **************** ");
 
         // TODO : edge to edge 데이터 보낼 때 전체 object에 대한 전자서명 적용 후 인증서로 검증하는 과정 추가 필요(HttpServletRequest에서 추출)
 
