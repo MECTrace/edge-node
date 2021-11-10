@@ -106,12 +106,12 @@ public class EdgeProcess {
             }
         }
 
+        // MEMO :: device에서 데이터를 받자마자 central(Auth)로 전송
+        sendFilesToCentral(filePath, certfilePath.toString(), metaData, hash);
+
         // MEMO :: device에서 데이터를 받자마자 임의의 Edge 2개로 전송
         sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
         sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
-
-        // MEMO :: device에서 데이터를 받자마자 central(Auth)로 전송
-        sendFilesToCentral(filePath, certfilePath.toString(), metaData, hash);
 
     }
 
@@ -161,6 +161,8 @@ public class EdgeProcess {
     @SneakyThrows
     private void sendToEdge(EdgeNode edge, String dataFilePath, String certFilePath, MetaData metaData, Hash hash) {
 
+        log.info("Spread 대상 Edge : {}, {}", edge.name(), edge.getIP());
+
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -173,7 +175,7 @@ public class EdgeProcess {
 
         ResponseEntity response = restTemplate.postForEntity("https://" + edge.getIP() + ":8443/api/edge/upload/edge/", requestEntity, String.class);
 
-        log.info("Edge IP {} :: 전송 성공 :: {} ", edge.getIP(), response);
+        log.info("Edge {} - {} :: 전송 성공 :: {} ", edge.name(), edge.getIP(), response);
 
     }
 
