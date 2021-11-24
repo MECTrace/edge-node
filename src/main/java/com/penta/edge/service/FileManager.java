@@ -94,13 +94,21 @@ public class FileManager {
     }
 
     private Path getSavingPathByDataID(MultipartFile file, Path location, String dataID) {
-        String orgName = StringUtils.cleanPath(file.getOriginalFilename());
+        // String orgName = StringUtils.cleanPath(file.getOriginalFilename());
         // String savedName = orgName.contains(".") ? dataID : dataID + ".csv";
-        return location.resolve(orgName);
+        String savedName = dataID+".csv.gz";
+        return location.resolve(savedName);
     }
 
     @SneakyThrows(IOException.class)
     public String saveFileFromVehicle(MultipartFile file, String dataID) {
+        Path targetLocation = getSavingPathByDataID(file, this.vehicleLocation, dataID);
+        Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        return targetLocation.toString();
+    }
+
+    @SneakyThrows(IOException.class)
+    public String saveFileFromEdge(MultipartFile file, String dataID) {
         Path targetLocation = getSavingPathByDataID(file, this.vehicleLocation, dataID);
         Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
         return targetLocation.toString();

@@ -106,12 +106,15 @@ public class EdgeProcess {
             }
         }
 
+
         // MEMO :: device에서 데이터를 받자마자 central(Auth)로 전송
         sendFilesToCentral(filePath, certfilePath.toString(), metaData, hash);
 
         // MEMO :: device에서 데이터를 받자마자 임의의 Edge 2개로 전송
         sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
         sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
+
+
 
     }
 
@@ -133,7 +136,7 @@ public class EdgeProcess {
         metaDataService.save(metaData);
 
         // (4) 데이터 파일 저장
-        fileManager.saveFileFromVehicle(datafile, metaData.getDataId());
+        fileManager.saveFileFromEdge(datafile, metaData.getDataId());
 
         // (5) 인증서 저장
         // 인증서가 저장될 폴더 확인(or 생성)
