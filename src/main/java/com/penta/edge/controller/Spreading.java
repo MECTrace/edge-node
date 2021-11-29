@@ -1,21 +1,12 @@
 package com.penta.edge.controller;
 
 
-import com.penta.edge.constant.EdgeInfo;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
-
-
-@RequiredArgsConstructor
-@Slf4j
-@Component
+// @RequiredArgsConstructor
+// @Slf4j
+//@Component
 public class Spreading {
-
+/*
     private final EdgeInfo edgeInfo;
 
     private Socket socket;
@@ -90,4 +81,6 @@ public class Spreading {
         }
 
     }
+
+ */
 }
