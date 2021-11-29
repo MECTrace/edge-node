@@ -45,6 +45,14 @@ public class DataController {
         // 데이터 수신시간 Timestamp
         LocalDateTime receivingTime = LocalDateTime.now();
 
+        /*
+        if(request.getHeader("host").startsWith("localhost")) {
+            return ResponseEntity.ok("ok");
+        }
+
+         */
+
+
         // Request의 인증서 추출
         X509Certificate[] certs = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
         X509Certificate certificate = certs[0];

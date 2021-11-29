@@ -29,15 +29,15 @@ public class SpreadingTest {
     @Test
     public void sendToControllerTest() {
 
-        String datafilePath = "/Users/penta/edgecloud_file/vehicle/5.2_Chevolet-Bolt-BMS_02구2392_1G1F76E0XJ4114544_2021-08-06T12_00_00.000.csv.gz";
-        String certfilePath = "/Users/penta/edgecloud_file/cert/Vehicle/556159dd893bc3e1a25326038ead0f365a0b7ee164807c77ad648f154cc464e0.crt";
+        String datafilePath = "/Users/penta/edgecloud_file/vehicle/5.2_Hyundai-Ionic2020_21부2270_KMHC851JFLU067889_2021-10-22T08_17_00.000.csv.gz";
+        String certfilePath = "/Users/penta/edgecloud_file/cert/Vehicle/44eb2f8d2f9aa98cd394570d1be096a68282f2b0c9027c250254614c2bbb9709.crt";
 
         MetaData metaData = MetaData.builder()
-                .dataId("02e6a8e21528dabb17f3875eb47f3e8cda15dca30b76c39dbc6a2e19e631a0aa")
+                .dataId("71a338dc6281ff3647077adb36f7b14b12f75d3e010b1a4a44491f37748a3873")
                 .availabilityPolicy(Integer.valueOf(1))
-                .cert("/Users/penta/edgecloud_file/cert/Vehicle/556159dd893bc3e1a25326038ead0f365a0b7ee164807c77ad648f154cc464e0.crt")
+                .cert("/Users/penta/edgecloud_file/cert/Vehicle/44eb2f8d2f9aa98cd394570d1be096a68282f2b0c9027c250254614c2bbb9709.crt")
                 .dataPriority(Integer.valueOf(1))
-                .dataSignature("533cf1e6653f2a8e53e4cec34cff91cbedbff4c70c16f61120bea8e50bd9da7277a5f27c9c0e206685ad959073282d26ac2b5a1f70ff1afc0556e71b1c391fbc4c51d0e102965fd97cc1deb9157a309a01431184bfd0b606b2d61ddf42496729f5823f9f0c8b3a720f62bc7879f57015fd3b6538b1aa32ac50fdc9e63c4e312755d87f096c0a5541a274ffd1e1260546f5a43661d1677310ca27e820fff7bf95db4aacb0f53b5bb4795027dd0c8d7597d9304960ea13f100dd7eaf5a1946927fee767700c7d195f8a4675c1ad44e57f363b39b1e98607955678d118957e966955fd8d8d2472a83c8ae62fd891132f509aa206b3fdda27472543bf0c3a66560c8")
+                .dataSignature("370b7622b70411f4c53dc802014280832863be8f44970c1e3c0ee9a2e7f0c711fa500ff10d3267ef450db2b68f3309c9ebbc60f5238f2b612b7ba1ede65574ac309849ea4c4c6e7ab61d364cf62eaeeb63cd31a0c9d931ad9e7f0e5e05d12293a32f3e147caf1d90391bb5edb5a004449001777e9d531402953de6604c80e0471fbe153f832ef3e65987ac2c89bf9db3995d1acc7538ed867f896eef90ec6e22bf19c6fccf90d9cba63b518944d6bc0a65855a5481ef070efaf4f1ad26fa1dccb645ace760e723b929999c59eb03878743781bdea93f676123f2362c97fcdc02b7f7e062ad313326f2b8ad55e4cd2beb2c95b44cb9f76735e0792f29d6ab885b")
                 .dataSize(7L)
                 .dataType(0)
                 .directory("/Users/penta/edgecloud_file/vehicle")
@@ -48,9 +48,9 @@ public class SpreadingTest {
                 .build();
 
         Hash hash = Hash.builder()
-                        .dataId("02e6a8e21528dabb17f3875eb47f3e8cda15dca30b76c39dbc6a2e19e631a0aa")
+                        .dataId("71a338dc6281ff3647077adb36f7b14b12f75d3e010b1a4a44491f37748a3873")
                         .destinationId("0123456789900")
-                        .sourceId("01556159dd893bc3e1a25326038ead0f365a0b7ee164807c77ad648f154cc464e0")
+                        .sourceId("0144eb2f8d2f9aa98cd394570d1be096a68282f2b0c9027c250254614c2bbb9709")
                         .timestamp(LocalDateTime.now())
                         .build();
 

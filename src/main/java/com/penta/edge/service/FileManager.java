@@ -71,6 +71,7 @@ public class FileManager {
         return hexStringBuffer.toString();
     }
 
+
     public String getSavingVehiclePath(MultipartFile file) {
         return getSavingPath(file, this.getVehicleLocation()).toString();
     }

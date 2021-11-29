@@ -6,10 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 
@@ -23,6 +21,32 @@ public class Spreading {
     private Socket socket;
     private BufferedReader br;
     private PrintWriter pw;
+
+    // 다른 엣지로부터 데이터를 전달받은 KETI Server가 호출할 소켓
+    // 이후
+    public void afterGettingDataFromEdge() {
+        try {
+            int socketPort = 17300;
+            ServerSocket serverSocket = new ServerSocket(socketPort);
+            Socket socketClient = null; // client 접속시 사용
+            log.info("socket :: " + socketPort + "open");
+
+            while (true) {
+                socketClient = serverSocket.accept();
+                log.info("socket :: connected to client {}",socketClient.getPort());
+
+                // cllient to server
+                InputStream input = socketClient.getInputStream(); // socket의 inputstream 정보
+                BufferedReader br = new BufferedReader(new InputStreamReader(input));
+                String clientMsg = br.readLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     public void getDeviceInfo() {
 
@@ -51,9 +75,15 @@ public class Spreading {
         } finally {
             // 소켓 닫기 (연결 끊기)
             try {
-                if(socket != null) { socket.close(); }
-                if(br != null) { br.close(); }
-                if(pw != null) { pw.close(); }
+                if (socket != null) {
+                    socket.close();
+                }
+                if (br != null) {
+                    br.close();
+                }
+                if (pw != null) {
+                    pw.close();
+                }
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
