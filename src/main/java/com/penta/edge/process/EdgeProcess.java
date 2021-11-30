@@ -28,7 +28,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -111,10 +114,41 @@ public class EdgeProcess {
         sendFilesToCentral(filePath, certfilePath.toString(), metaData, hash);
 
         // MEMO :: device에서 데이터를 받자마자 임의의 Edge 2개로 전송
-        sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
-        sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
+        sendToEdge(metaData.getDataId(), edgeNode[0]);
+        sendToEdge(metaData.getDataId(), edgeNode[1]);
 
+        // sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
+        // sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
 
+    }
+
+    /*
+    * KETI SOCKET(16300) 호출
+    * */
+    @SneakyThrows
+    public void sendToEdge(String dataid, EdgeNode edge) {
+
+        Socket socket = new Socket("127.0.0.1", 16300);
+        OutputStream output = socket.getOutputStream();
+
+        //{[{REQ::ID::REQ_CODE::REQ_DATA}]}
+        String reqString = "{[{REQ::"+edge.getIP()+"::007::"+dataid+"}]}";
+        byte[] data = reqString.getBytes(StandardCharsets.US_ASCII);
+        output.write(data);
+        output.flush();
+
+        log.info("SENT DATA :: edge IP - {}, dataid - {}", edge.getIP(), dataid);
+
+        InputStream input = socket.getInputStream();
+        byte[] bytes = new byte[200];
+        int readByteCount = input.read(bytes);
+        String receivedMsg = new String(bytes,0,readByteCount,"UTF-8");
+        log.info("GOT DATA :: msg - {}",receivedMsg);
+
+        output.close();
+        input.close();
+
+        socket.close();
 
     }
 
