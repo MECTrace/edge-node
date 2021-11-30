@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -19,8 +20,8 @@ public class ETET {
         OutputStream output = socket.getOutputStream();
 
         // byte[] data = {0x02, 0x10, 0x11, 0x01, 0x01, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xCF, (byte) 0xEC, 0x03};
-        // byte[] data = "{ANS::127.0.0.1::007::Successes::6ed763afcf250364df4d60ab8b526eff647f7fb4d344217b89536c6dc736f0e8}".getBytes(StandardCharsets.US_ASCII);
-        byte[] data = {0x7B, 0x50, 0x51, 0x52, 0x7D};
+        byte[] data = "{[{ANS::20.194.98.12::007::Successes::6ed763afcf250364df4d60ab8b526eff647f7fb4d344217b89536c6dc736f0e8}]}".getBytes(StandardCharsets.US_ASCII);
+        // byte[] data = {0x7B, 0x50, 0x51, 0x52, 0x7D};
 
         output.write(data);
 

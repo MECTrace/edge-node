@@ -33,7 +33,7 @@ public class DataController {
     private final EdgeProcess edgeProcess;
     private final EdgeInfo edgeInfo;
 
-    // TODO : 송신자별 URL생성 필요 (/upload/{sender})
+
     @PostMapping(value = "/upload/vehicle")
     public ResponseEntity<?> getFile(
             @RequestParam("file") MultipartFile[] files,
@@ -150,10 +150,12 @@ public class DataController {
 
         // metadata > 그대로 저장
         MetaData metaData = req.getMetadata().toMetaData();
-
         // LIST로 받지만 인덱스는 1개임.
         edgeProcess.saveMetaHashFromEdge(receivingTime, req.getUuid(), req.getDatafile().get(0), req.getCertfile().get(0), metaData);
+
+
         return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 

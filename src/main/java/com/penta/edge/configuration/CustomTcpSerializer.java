@@ -11,6 +11,8 @@ import java.io.OutputStream;
 public class CustomTcpSerializer extends AbstractPooledBufferByteArraySerializer {
     public static final CustomTcpSerializer INSTANCE = new CustomTcpSerializer();
 
+    // 포맷 시작 문자 "{"  ,  끝문자 "}"
+
     public static final int STX_DEC = 123;
     public static final int STX_HEX = 0x7B;
 
@@ -21,13 +23,13 @@ public class CustomTcpSerializer extends AbstractPooledBufferByteArraySerializer
     public byte[] doDeserialize(InputStream inputStream, byte[] buffer) throws IOException {
         int bite = inputStream.read();
         if (bite < 0) {
-            throw new SoftEndOfStreamException("Stream closed between payloads");
+            throw new SoftEndOfStreamException("Serializer :: 빈 메시지");
         }
         buffer[0] = (byte) bite;
         int n = 1;
         try {
             if (bite != STX_DEC && bite != STX_HEX) {
-                throw new MessageMappingException("Expected STX to begin message");
+                throw new MessageMappingException("Serializer :: Start of Text가 일치하지 않음");
             }
             while (true) {
                 bite = inputStream.read();
@@ -39,7 +41,7 @@ public class CustomTcpSerializer extends AbstractPooledBufferByteArraySerializer
                 }
             }
             if (buffer[n-1] != ETX_DEC && buffer[n-1] != ETX_HEX) {
-                throw new MessageMappingException("Expected ETX to end message");
+                throw new MessageMappingException("Serializer :: End of Text가 일치하지 않음");
             }
             return copyToSizedArray(buffer, n);
         } catch (IOException e) {
