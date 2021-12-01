@@ -26,12 +26,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -125,30 +123,32 @@ public class EdgeProcess {
     /*
     * KETI SOCKET(16300) 호출
     * */
-    @SneakyThrows
     public void sendToEdge(String dataid, EdgeNode edge) {
 
-        Socket socket = new Socket("127.0.0.1", 16300);
-        OutputStream output = socket.getOutputStream();
+        try (Socket socket = new Socket("127.0.0.1", 16300);
+             OutputStream output = socket.getOutputStream();){
 
-        //{[{REQ::ID::REQ_CODE::REQ_DATA}]}
-        String reqString = "{[{REQ::"+edge.getIP()+"::007::"+dataid+"}]}";
-        byte[] data = reqString.getBytes(StandardCharsets.US_ASCII);
-        output.write(data);
-        output.flush();
+            //{[{REQ::ID::REQ_CODE::REQ_DATA}]}
+            String reqString = "{[{REQ::"+edge.getIP()+"::007::"+dataid+"}]}";
+            byte[] data = reqString.getBytes(StandardCharsets.US_ASCII);
+            output.write(data);
+            output.flush();
 
-        log.info("SENT DATA :: edge IP - {}, dataid - {}", edge.getIP(), dataid);
+            log.info("SENT DATA :: edge IP - {}, dataid - {}", edge.getIP(), dataid);
 
-        InputStream input = socket.getInputStream();
-        byte[] bytes = new byte[200];
-        int readByteCount = input.read(bytes);
-        String receivedMsg = new String(bytes,0,readByteCount,"UTF-8");
-        log.info("GOT DATA :: msg - {}",receivedMsg);
+            InputStream input = socket.getInputStream();
+            byte[] bytes = new byte[200];
+            int readByteCount = input.read(bytes);
+            String receivedMsg = new String(bytes,0,readByteCount,"UTF-8");
+            log.info("GOT DATA :: msg - {}",receivedMsg);
 
-        output.close();
-        input.close();
+            input.close();
 
-        socket.close();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
