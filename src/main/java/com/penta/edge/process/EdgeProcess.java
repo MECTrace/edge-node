@@ -134,6 +134,8 @@ public class EdgeProcess {
             output.write(data);
             output.flush();
 
+            log.info("SOCKET PORT :: {}", socket.getPort());
+            log.info("SOCKET LOCAL PORT :: {}", socket.getLocalPort());
             log.info("SENT DATA :: edge IP - {}, dataid - {}", edge.getIP(), dataid);
 
             InputStream input = socket.getInputStream();
