@@ -100,7 +100,7 @@ public class EdgeProcess {
         while (idx <= 1) {
             EdgeNode edge = EdgeNode.values()[random.nextInt(4)];
             if (!edge.getIP().equals(edgeInfo.getIP())) {
-                if(idx == 0 ||(idx == 1 && !edgeNode[0].getIP().equals(edge.getIP()))) {
+                if (idx == 0 || (idx == 1 && !edgeNode[0].getIP().equals(edge.getIP()))) {
                     edgeNode[idx] = edge;
                     idx++;
                 }
@@ -121,15 +121,17 @@ public class EdgeProcess {
     }
 
     /*
-    * KETI SOCKET(16300) 호출
-    * */
+     * KETI SOCKET(16300) 호출
+     * */
     public void sendToEdge(String dataid, EdgeNode edge) {
 
+        InputStream input = null;
+
         try (Socket socket = new Socket("127.0.0.1", 16300);
-             OutputStream output = socket.getOutputStream();){
+             OutputStream output = socket.getOutputStream();) {
 
             //{[{REQ::ID::REQ_CODE::REQ_DATA}]}
-            String reqString = "{[{REQ::"+edge.getIP()+"::007::"+dataid+"}]}";
+            String reqString = "{[{REQ::" + edge.getIP() + "::007::" + dataid + "}]}";
             byte[] data = reqString.getBytes(StandardCharsets.US_ASCII);
             output.write(data);
             output.flush();
@@ -138,18 +140,23 @@ public class EdgeProcess {
             log.info("SOCKET LOCAL PORT :: {}", socket.getLocalPort());
             log.info("SENT DATA :: edge IP - {}, dataid - {}", edge.getIP(), dataid);
 
-            InputStream input = socket.getInputStream();
+            input = socket.getInputStream();
+
             byte[] bytes = new byte[200];
             int readByteCount = input.read(bytes);
-            String receivedMsg = new String(bytes,0,readByteCount,"UTF-8");
-            log.info("GOT DATA :: msg - {}",receivedMsg);
-
-            input.close();
+            String receivedMsg = new String(bytes, 0, readByteCount, "UTF-8");
+            log.info("GOT DATA :: msg - {}", receivedMsg);
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                input.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
