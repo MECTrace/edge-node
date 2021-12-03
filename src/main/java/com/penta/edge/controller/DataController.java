@@ -1,12 +1,14 @@
 package com.penta.edge.controller;
 
 import com.penta.edge.constant.EdgeInfo;
+import com.penta.edge.domain.Hash;
 import com.penta.edge.domain.MetaData;
 import com.penta.edge.domain.RequestDto;
 import com.penta.edge.process.EdgeProcess;
 import com.penta.edge.service.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -138,6 +140,38 @@ public class DataController {
     }
 
 
+    /*
+    * supporter에서 호출하는 API : 다운로드 받은 client의 IP와 다운로드 시간을 받아 tracing history 생성
+
+    * central web에서 datafile download클릭 시 supporter API가 호출되고
+    * supporter API는 본 API를 호출. 이후 tracing history를 생성하여 central로 해당 데이터 전송
+    *
+    * */
+    @PostMapping(value = "/make/history")
+    public ResponseEntity<?> getDataFromEdgeSupporter(
+            @RequestParam String dataid,
+            @RequestParam String clientip,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime downloadtime) {
+
+        ResponseEntity<String> response = edgeProcess.sendHashToCentral(Hash.builder()
+                .sourceId(clientip)
+                .destinationId(edgeInfo.getName())
+                .dataId(dataid)
+                .timestamp(downloadtime)
+                .build());
+
+        if(response.getStatusCodeValue()!=200) {
+            log.warn("edge에는 tracing history가 정상적으로 저장되었으나 central로 전송하는데 실패함");
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    /*
+    * edge1(penta) -> edge2(penta) https 컨트롤러.
+    * edge1(penta) -> edge1(keti) -> edge2(keti) -> edge2(penta) socket 통신으로 수정하면서 사용되지 않음.
+    * */
     @PostMapping(value = "/upload/edge")
     public ResponseEntity<?> getFile(RequestDto req, HttpServletRequest request) {
 

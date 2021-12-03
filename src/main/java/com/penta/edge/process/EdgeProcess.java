@@ -270,35 +270,22 @@ public class EdgeProcess {
 
         log.info("sendFilesToCentral(Auth) response :: {}", response);
         log.info("------ sendFilesToCentral end ------");
-        /*
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        MultiValueMap<String, Object> body= new LinkedMultiValueMap<>();
-
-        body.add("datafile", new FileSystemResource(dataFilePath));
-        body.add("certfile", new FileSystemResource(certFilePath));
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        body.add("metadata", objectMapper.writeValueAsString(metaData));
-        body.add("hashtable", objectMapper.writeValueAsString(hash));
-
-        HttpEntity<MultiValueMap<String,Object>> requestEntity = new HttpEntity<>(body, header);
-
-        String centralUrl = "http://20.196.220.98:80/api/tracking/add/data";
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity(centralUrl, requestEntity, String.class);
-
-        log.info("file(cert,datafile) & hash, metadata to central :: 응답 :: {} ", response);
-
-         */
 
     }
 
+
+    /*
+    * 사용자가 central web에서 datafile 다운로드한 history를 해당 datafile이 있는 edge에서 tracing history를 생성하고
+    * 그 정보를 central로 전송
+    * */
+    public ResponseEntity<String> sendDownloadHashToCentral(Hash hash) {
+        hashService.save(hash);
+        return sendHashToCentral(hash);
+    }
+
     @SneakyThrows
-    public void sendHashToCentral(Hash hash) {
+    public ResponseEntity<String> sendHashToCentral(Hash hash) {
 
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -321,8 +308,8 @@ public class EdgeProcess {
 
         log.info("sendHashToCentral(Auth) response :: {} ", response);
 
+        return response;
     }
-
 
     private MultiValueMap<String, Object> convertObjectToMultiValueMap(Object... objects) {
 
@@ -357,7 +344,7 @@ public class EdgeProcess {
 
     @SneakyThrows
     private PrivateKey getPrivateKey() {
-        KeyStore keyStore = KeyStore.getInstance("JKS");
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
         keyStore.load(new FileInputStream(certificateProperties.getKeyStore()), certificateProperties.getKeyStorePassword().toCharArray());
         // keyStore.load(new FileInputStream("/Users/penta/IdeaProjects/cloudEdge/transmitter/src/main/resources/client-key.jks"), this.keyPassword.toCharArray());
         return (PrivateKey) keyStore.getKey(certificateProperties.getKeyAlias(), certificateProperties.getKeyStorePassword().toCharArray());

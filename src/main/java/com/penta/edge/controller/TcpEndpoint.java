@@ -29,9 +29,4 @@ public class TcpEndpoint {
     }
 
 
-    public void test() {
-        // 16300으로 데이터를 보낸다....
-    }
-
-
 }
