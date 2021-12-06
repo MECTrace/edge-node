@@ -119,7 +119,7 @@ public class DataController {
                         MetaData.builder()
                         .dataId(fileHash)                           // 데이터 파일의 해시 값
                         .timestamp(timestamp)                       // 데이터 파일 생성 시간
-                        .fileType("csv")                            // 데이터 파일 타입
+                        .fileType("csv.gz")                            // 데이터 파일 타입
                         .dataType(Integer.valueOf(0))
                         .securityLevel(Integer.valueOf(4))
                         .dataPriority(Integer.valueOf(1))
