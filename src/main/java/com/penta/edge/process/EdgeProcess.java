@@ -75,6 +75,7 @@ public class EdgeProcess {
         // 인증서 저장 위치 초기화
         metaData.setCert(certPath.toString());
         metaDataService.save(metaData);
+        log.info("--------- METADATA 저장 완료. Exception 발생 시 ROLLBACK ---------");
         // (3) HashTable 저장
 
         Hash hash = Hash.builder()
@@ -84,6 +85,7 @@ public class EdgeProcess {
                 .timestamp(receivingTime)                                    // 수신 시간
                 .build();
         hashService.save(hash);
+        log.info("--------- HASHTABLE 저장 완료. Exception 발생 시 ROLLBACK ---------");
 
         // (4) 데이터 파일 저장
         String filePath = fileManager.saveFileFromVehicle(file, metaData.getDataId());
