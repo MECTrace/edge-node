@@ -65,7 +65,7 @@ public class EdgeProcess {
      * */
     @Transactional
     @SneakyThrows
-    public void saveMetaHashFromVehicle(
+    public EdgeNode[] saveMetaHashFromVehicle(
             MultipartFile file, X509Certificate certificate,
             LocalDateTime receivingTime, MetaData metaData) {
 
@@ -115,9 +115,7 @@ public class EdgeProcess {
         // MEMO :: device에서 데이터를 받자마자 central(Auth)로 전송
         sendFilesToCentral(filePath, certfilePath.toString(), metaData, hash);
 
-        // MEMO :: device에서 데이터를 받자마자 임의의 Edge 2개로 전송
-        sendToEdge(metaData.getDataId(), edgeNode[0]);
-        sendToEdge(metaData.getDataId(), edgeNode[1]);
+        return edgeNode;
 
         // sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
         // sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
