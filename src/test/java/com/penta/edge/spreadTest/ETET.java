@@ -66,6 +66,7 @@ public class ETET {
 
     @Test
     public void test2() throws IOException {
+        /*
         Socket socket = new Socket("20.194.98.12", 16300);
         OutputStream output = socket.getOutputStream();
 
@@ -79,6 +80,8 @@ public class ETET {
         String receivedMsg = new String(bytes, 0, readByteCount, "UTF-8");
         System.out.println(receivedMsg);
         socket.close();
+
+         */
 
     }
 
