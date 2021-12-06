@@ -1,6 +1,7 @@
 package com.penta.edge.controller;
 
 import com.penta.edge.constant.EdgeInfo;
+import com.penta.edge.constant.EdgeNode;
 import com.penta.edge.domain.Hash;
 import com.penta.edge.domain.MetaData;
 import com.penta.edge.domain.RequestDto;
@@ -114,7 +115,7 @@ public class DataController {
                 String fileHash = fileManager.getHash(file);
 
                 // Meta data 생성 및 DB저장(Meta Data, Hash Table)
-                edgeProcess.saveMetaHashFromVehicle(file, certificate, receivingTime,
+                EdgeNode[] targetEdges = edgeProcess.saveMetaHashFromVehicle(file, certificate, receivingTime,
                         MetaData.builder()
                         .dataId(fileHash)                           // 데이터 파일의 해시 값
                         .timestamp(timestamp)                       // 데이터 파일 생성 시간
@@ -130,6 +131,12 @@ public class DataController {
                         .dataSize(file.getSize() / 1024)            // 데이터 파일 크기
                         .build()
                 );
+
+                // 파일, DB저장 후 KETI Socket 통신
+                edgeProcess.sendToEdge(fileHash, targetEdges[0]);
+                edgeProcess.sendToEdge(fileHash, targetEdges[1]);
+
+
             } else {
                 // 서명이 일치하지 않은 경우
                 log.error("FAILED TO VERIFY");
