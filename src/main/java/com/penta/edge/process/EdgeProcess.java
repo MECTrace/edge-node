@@ -279,7 +279,7 @@ public class EdgeProcess {
     * 사용자가 central web에서 datafile 다운로드한 history를 해당 datafile이 있는 edge에서 tracing history를 생성하고
     * 그 정보를 central로 전송
     * */
-    public ResponseEntity<String> sendDownloadHashToCentral(Hash hash) {
+    public ResponseEntity<String> saveAndsendDownloadHashToCentral(Hash hash) {
         hashService.save(hash);
         return sendHashToCentral(hash);
     }
