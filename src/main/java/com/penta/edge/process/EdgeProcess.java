@@ -129,18 +129,19 @@ public class EdgeProcess {
      * */
     public void sendToEdge(String dataid, EdgeNode edge) {
 
+        OutputStream output = null;
         InputStream input = null;
         String hostname = "127.0.0.1";
         int port = 16300;
-        int timeout = 5000;
+        int timeout = 3000;
         SocketAddress socketAddress = new InetSocketAddress(hostname, port);
 
-        try (Socket socket = new Socket();
-             OutputStream output = socket.getOutputStream();) {
+        try (Socket socket = new Socket();) {
 
             log.info("TIMEOUT 설정 :: {}", timeout);
             socket.setSoTimeout(timeout);    //inputstream 에서 데이터를 읽을때의 timeout
             socket.connect(socketAddress, timeout);
+            output = socket.getOutputStream();
 
             //{[{REQ::ID::REQ_CODE::REQ_DATA}]}
             String reqString = "{[{REQ::" + edge.getIP() + "::007::" + dataid + "}]}";
@@ -165,6 +166,7 @@ public class EdgeProcess {
             e.printStackTrace();
         } finally {
             try {
+                output.close();
                 input.close();
             } catch (IOException e) {
                 e.printStackTrace();
