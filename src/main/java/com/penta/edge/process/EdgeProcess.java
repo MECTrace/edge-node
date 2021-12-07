@@ -131,14 +131,14 @@ public class EdgeProcess {
         InputStream input = null;
         String hostname = "127.0.0.1";
         int port = 16300;
-        int timeout = 3000;
+        int timeout = 10000;
         SocketAddress socketAddress = new InetSocketAddress(hostname, port);
 
         try (Socket socket = new Socket();) {
 
             log.info("TIMEOUT 설정 :: {}", timeout);
-            socket.setSoTimeout(timeout);    //inputstream 에서 데이터를 읽을때의 timeout
             socket.connect(socketAddress, timeout);
+            socket.setSoTimeout(timeout);    //inputstream 에서 데이터를 읽을때의 timeout
             output = socket.getOutputStream();
 
             //{[{REQ::ID::REQ_CODE::REQ_DATA}]}
@@ -147,6 +147,7 @@ public class EdgeProcess {
             output.write(data);
             output.flush();
 
+            log.info("REQUEST STRING :: {}", reqString);
             log.info("SOCKET PORT(target) :: {}", socket.getPort());
             log.info("SOCKET LOCAL PORT(me) :: {}", socket.getLocalPort());
             log.info("SENT DATA :: edge IP - {}, dataid - {}", edge.getIP(), dataid);
@@ -157,6 +158,10 @@ public class EdgeProcess {
             int readByteCount = input.read(bytes);
             String receivedMsg = new String(bytes, 0, readByteCount, "UTF-8");
             log.info("RECEIVED MESSAGE :: msg - {}", receivedMsg);
+
+            if(receivedMsg.toLowerCase().contains("fail")) {
+                log.warn("SPREAD FAIL :: dataid - {}", dataid);
+            }
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
