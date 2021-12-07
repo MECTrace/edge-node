@@ -16,7 +16,7 @@ public class TcpEndpoint {
     private final TcpMessageService tcpMessageService;
 
     @ServiceActivator(inputChannel = "inboundChannel", async = "true")
-    public void getMessageFromKETI(byte[] message) {
+    public void inboundChannel(byte[] message) {
 
         log.info("■ ■ ■ ■ ■ ■ ■ ■ DATA RECEIVED (PORT:17300) ■ ■ ■ ■ ■ ■ ■ ■ ");
 
