@@ -28,9 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -127,19 +125,16 @@ public class EdgeProcess {
      * */
     public void sendToEdge(String dataid, EdgeNode edge) {
 
-        OutputStream output = null;
         InputStream input = null;
+
         String hostname = "127.0.0.1";
         int port = 16300;
         int timeout = 10000;
-        SocketAddress socketAddress = new InetSocketAddress(hostname, port);
 
-        try (Socket socket = new Socket();) {
-
-            log.info("TIMEOUT 설정 :: {}", timeout);
-            socket.connect(socketAddress, timeout);
-            socket.setSoTimeout(timeout);    //inputstream 에서 데이터를 읽을때의 timeout
-            output = socket.getOutputStream();
+        try(Socket socket = new Socket(hostname, port);
+            OutputStream output = socket.getOutputStream();) {
+            socket.setSoTimeout(timeout);
+            log.info("READ TIMEOUT 설정 :: {}", timeout);
 
             //{[{REQ::ID::REQ_CODE::REQ_DATA}]}
             String reqString = "{[{REQ::" + edge.getIP() + "::007::" + dataid + "}]}";
@@ -169,12 +164,60 @@ public class EdgeProcess {
             e.printStackTrace();
         } finally {
             try {
+                input.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /*
+
+        OutputStream output = null;
+        InputStream input = null;
+         SocketAddress socketAddress = new InetSocketAddress(hostname, port);
+
+        try (Socket socket = new Socket();) {
+
+            log.info("TIMEOUT 설정 :: {}", timeout);
+            socket.connect(socketAddress, timeout);
+            socket.setSoTimeout(timeout);    //inputstream 에서 데이터를 읽을때의 timeout
+            output = socket.getOutputStream();
+
+            //{[{REQ::ID::REQ_CODE::REQ_DATA}]}
+            String reqString = "{[{REQ::" + edge.getIP() + "::007::" + dataid + "}]}";
+            byte[] data = reqString.getBytes(StandardCharsets.US_ASCII);
+            output.write(data);
+            output.flush();
+
+            log.info("REQUEST STRING :: {}", reqString);
+            log.info("SOCKET PORT(target) :: {}", socket.getPort());
+            log.info("SOCKET LOCAL PORT(me) :: {}", socket.getLocalPort());
+            log.info("SENT DATA :: edge IP - {}, dataid - {}", edge.getIP(), dataid);
+
+            input = socket.getInputStream();
+
+            byte[] bytes = new byte[200];
+            int readByteCount = input.read(bytes);
+            String receivedMsg = new String(bytes, 0, readByteCount, "UTF-8");
+            log.info("RECEIVED MESSAGE :: msg - {}", receivedMsg);
+
+            if(receivedMsg.toLowerCase().contains("fail")) {
+                log.warn("SPREAD FAIL :: dataid - {}", dataid);
+            }
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
                 output.close();
                 input.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+         */
 
     }
 
