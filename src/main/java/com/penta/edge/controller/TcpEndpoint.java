@@ -18,6 +18,8 @@ public class TcpEndpoint {
     @ServiceActivator(inputChannel = "inboundChannel", async = "true")
     public void getMessageFromKETI(byte[] message) {
 
+        log.info("■ ■ ■ ■ ■ ■ ■ ■ DATA RECEIVED (PORT:17300) ■ ■ ■ ■ ■ ■ ■ ■ ");
+
         // 데이터 수신시간 Timestamp
         LocalDateTime receivingTime = LocalDateTime.now();
         String receivedMsg = new String(message);
@@ -32,8 +34,10 @@ public class TcpEndpoint {
         * */
 
         if(receivedMsg.contains("sptoedge9812")) {
+            log.info("--------- DATA FROM EDGE-SUPPORTER ---------");
             tcpMessageService.getDataFromSupporter(message);
         } else {
+            log.info("--------- DATA FROM EDGE(KETI SPREAD) ---------");
             tcpMessageService.getMessageFromKETI(message, receivingTime);
         }
 
