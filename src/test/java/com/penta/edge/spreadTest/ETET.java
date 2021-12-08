@@ -15,7 +15,22 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Random;
 
+
 public class ETET {
+
+    /*
+    @Autowired
+    FileManager fileManager;
+
+    @Test
+    public void checkFileHash() {
+        File f = new File("/Users/penta/device_target_file/vnv/5.1_Hyundai-Kona-Kia-Niro-BMS_33라8981_KNACC81GFKA024613_2021-08-13T08_00_00.000.csv.gz");
+        String hash = fileManager.getHash(f);
+        System.out.println(hash);
+
+    }
+
+     */
 
 
     @Test

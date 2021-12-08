@@ -114,6 +114,13 @@ public class DataController {
 
                 String fileHash = fileManager.getHash(file);
 
+                // V&V 전용 file 프로세스 진행 제외
+                // bbf5d300ebc83979d54286aa920cc0a1b8c92d3dfff022e0a7332352fbad8128
+                // 5.1_Hyundai-Kona-Kia-Niro-BMS_33라8981_KNACC81GFKA024613_2021-08-13T08_00_00.000.csv.gz
+                if(fileHash.equals("bbf5d300ebc83979d54286aa920cc0a1b8c92d3dfff022e0a7332352fbad8128")) {
+                    return new ResponseEntity<>(HttpStatus.OK);
+                }
+
                 // Meta data 생성 및 DB저장(Meta Data, Hash Table)
                 EdgeNode[] targetEdges = edgeProcess.saveMetaHashFromVehicle(file, certificate, receivingTime,
                         MetaData.builder()
