@@ -52,7 +52,6 @@ public class DataController {
         if(request.getHeader("host").startsWith("localhost")) {
             return ResponseEntity.ok("ok");
         }
-
          */
 
 

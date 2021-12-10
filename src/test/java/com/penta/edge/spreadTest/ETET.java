@@ -12,8 +12,11 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.TimeZone;
 
 
 public class ETET {
@@ -32,6 +35,22 @@ public class ETET {
 
      */
 
+
+    @Test
+    public void test4() {
+
+        long zz = 1639113376746L;
+        LocalDateTime aa = LocalDateTime.ofInstant(Instant.ofEpochMilli(zz), TimeZone.getDefault().toZoneId());
+        System.out.println(aa);
+
+        /*
+        long beforeTime = System.currentTimeMillis();
+        System.out.println(beforeTime);
+        long afterTime = System.currentTimeMillis();
+        long secDiffTime = (afterTime - beforeTime)/10000L;
+        System.out.println(secDiffTime);
+         */
+    }
 
     @Test
     public void test3()  {

@@ -34,12 +34,15 @@ public class TcpMessageService {
                 .findFirst()
                 .orElseThrow().getUUID();
 
-        hashService.save(Hash.builder()
+        Hash hash = Hash.builder()
                 .dataId(msgArr[4])
                 .sourceId(sourceId)
                 .destinationId(edgeInfo.getName())
                 .timestamp(receivingTime)
-                .build());
+                .build();
+
+        hashService.save(hash);
+        edgeProcess.sendHashToCentral(hash);
 
     }
 
