@@ -120,6 +120,8 @@ public class DataController {
                     return new ResponseEntity<>(HttpStatus.OK);
                 }
 
+                double fileSize = file.getSize()/1024;
+
                 // Meta data 생성 및 DB저장(Meta Data, Hash Table)
                 EdgeNode[] targetEdges = edgeProcess.saveMetaHashFromVehicle(file, certificate, receivingTime,
                         MetaData.builder()
@@ -134,9 +136,10 @@ public class DataController {
                         .cert(null)                                 // 인증서 저장 위치(파일명 포함) >> endgeProcess에서 초기화
                         .directory(fileManager.getVehicleLocation().toString()) // 데이터 파일 저장 위치(파일명 제외)
                         .linkedEdge(null)                           // 데이터 파일 원본을 소유하고 있는 Edge Node의 UUID
-                        .dataSize(file.getSize() / 1024)            // 데이터 파일 크기
+                        .dataSize((long)Math.ceil(fileSize))        // 데이터 파일 크기(올림)
                         .build()
                 );
+
 
                 // 파일, DB저장 후 KETI Socket 통신
                 edgeProcess.sendToEdge(fileHash, targetEdges[0]);
@@ -184,6 +187,7 @@ public class DataController {
     /*
     * edge1(penta) -> edge2(penta) https 컨트롤러.
     * edge1(penta) -> edge1(keti) -> edge2(keti) -> edge2(penta) socket 통신으로 수정하면서 사용되지 않음.
+    * "/api/edge/upload/edge
     * */
     @PostMapping(value = "/upload/edge")
     public ResponseEntity<?> getFile(RequestDto req, HttpServletRequest request) {
