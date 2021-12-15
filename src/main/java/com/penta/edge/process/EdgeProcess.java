@@ -327,7 +327,9 @@ public class EdgeProcess {
     /*
     * EdgeSupporter로 부터 들어오는 삭제요청을 받아 db데이터 삭제
     * */
+    @Transactional
     public void deleteMetaAndHash(String dataid) {
+        fileManager.removeFile(dataid, "csv.gz");
         hashService.delete(dataid);
         metaDataService.delete(dataid);
     }

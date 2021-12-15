@@ -46,6 +46,16 @@ public class FileManager {
         }
     }
 
+    public void removeFile(String filename, String fileType) {
+        String savedName = filename+"."+fileType;
+        Path pathWithFileNameAndType = this.vehicleLocation.resolve(savedName);
+        log.info("삭제 대상 파일 :: {}",pathWithFileNameAndType);
+        File deletedTarget = new File(pathWithFileNameAndType.toString());
+        if(deletedTarget.exists()) {
+            deletedTarget.delete();
+        }
+    }
+
     public boolean isDateTime(String dateTime, String format) {
 
         return false;
