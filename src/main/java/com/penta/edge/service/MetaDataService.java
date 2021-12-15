@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 public class MetaDataService {
 
     private final MetaDataRepository metaDataRepository;
+
     public void save(MetaData metaData) {
         metaDataRepository.save(metaData);
     }
+    public void delete(String dataid) {metaDataRepository.deleteById(dataid);}
 
 }

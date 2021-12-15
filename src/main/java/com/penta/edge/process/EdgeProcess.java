@@ -170,54 +170,6 @@ public class EdgeProcess {
             }
         }
 
-        /*
-
-        OutputStream output = null;
-        InputStream input = null;
-         SocketAddress socketAddress = new InetSocketAddress(hostname, port);
-
-        try (Socket socket = new Socket();) {
-
-            log.info("TIMEOUT 설정 :: {}", timeout);
-            socket.connect(socketAddress, timeout);
-            socket.setSoTimeout(timeout);    //inputstream 에서 데이터를 읽을때의 timeout
-            output = socket.getOutputStream();
-
-            //{[{REQ::ID::REQ_CODE::REQ_DATA}]}
-            String reqString = "{[{REQ::" + edge.getIP() + "::007::" + dataid + "}]}";
-            byte[] data = reqString.getBytes(StandardCharsets.US_ASCII);
-            output.write(data);
-            output.flush();
-
-            log.info("REQUEST STRING :: {}", reqString);
-            log.info("SOCKET PORT(target) :: {}", socket.getPort());
-            log.info("SOCKET LOCAL PORT(me) :: {}", socket.getLocalPort());
-            log.info("SENT DATA :: edge IP - {}, dataid - {}", edge.getIP(), dataid);
-
-            input = socket.getInputStream();
-
-            byte[] bytes = new byte[200];
-            int readByteCount = input.read(bytes);
-            String receivedMsg = new String(bytes, 0, readByteCount, "UTF-8");
-            log.info("RECEIVED MESSAGE :: msg - {}", receivedMsg);
-
-            if(receivedMsg.toLowerCase().contains("fail")) {
-                log.warn("SPREAD FAIL :: dataid - {}", dataid);
-            }
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                output.close();
-                input.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-         */
 
     }
 
@@ -370,6 +322,16 @@ public class EdgeProcess {
 
         return response;
     }
+
+
+    /*
+    * EdgeSupporter로 부터 들어오는 삭제요청을 받아 db데이터 삭제
+    * */
+    public void deleteMetaAndHash(String dataid) {
+        hashService.delete(dataid);
+        metaDataService.delete(dataid);
+    }
+
 
     private MultiValueMap<String, Object> convertObjectToMultiValueMap(Object... objects) {
 

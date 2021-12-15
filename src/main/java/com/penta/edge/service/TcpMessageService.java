@@ -67,9 +67,25 @@ public class TcpMessageService {
                         .destinationId(edgeInfo.getName())
                         .build()
         );
+    }
 
+    /*
+    * supporter로 부터 들어오는 데이터 삭제요청 처리
+    * */
+    public void deleteMetaAndHash(byte[] message) {
 
+        /*
+         * message format
+         * {[{sptoedge1108::DATA_ID::}]}
+         * */
 
+        String receivedMsg = new String(message);
+        String[] data = receivedMsg.split("::");
+
+        edgeProcess.deleteMetaAndHash(data[1]);
 
     }
+
+
+
 }

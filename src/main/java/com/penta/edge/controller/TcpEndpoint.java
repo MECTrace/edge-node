@@ -34,9 +34,13 @@ public class TcpEndpoint {
         * */
 
         if(receivedMsg.contains("sptoedge9812")) {
-            log.info("--------- DATA FROM EDGE-SUPPORTER ---------");
+            log.info("--------- DATA FROM EDGE-SUPPORTER(파일 다운로드/history 생성) ---------");
             tcpMessageService.getDataFromSupporter(message);
-        } else {
+        } else if(receivedMsg.contains("sptoedge1108")) {
+            log.info("--------- DATA FROM EDGE-SUPPORTER(datafile삭제(metadata, hashtable 삭제)) ---------");
+            tcpMessageService.deleteMetaAndHash(message);
+        }
+        else {
             log.info("--------- DATA FROM EDGE(KETI SPREAD) ---------");
             tcpMessageService.getMessageFromKETI(message, receivingTime);
         }

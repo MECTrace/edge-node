@@ -14,5 +14,5 @@ public class HashService {
     public Hash save(Hash hash) {
         return hashRepository.save(hash);
     }
-
+    public void delete(String dataid) { hashRepository.deleteById(dataid);}
 }
