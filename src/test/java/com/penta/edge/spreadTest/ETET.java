@@ -1,24 +1,6 @@
 package com.penta.edge.spreadTest;
 
 
-import com.penta.edge.constant.EdgeNode;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.TimeZone;
-
-
 public class ETET {
 
     /*
@@ -33,7 +15,7 @@ public class ETET {
 
     }
 
-     */
+
 
 
 
@@ -44,13 +26,12 @@ public class ETET {
         LocalDateTime aa = LocalDateTime.ofInstant(Instant.ofEpochMilli(zz), TimeZone.getDefault().toZoneId());
         System.out.println(aa);
 
-        /*
         long beforeTime = System.currentTimeMillis();
         System.out.println(beforeTime);
         long afterTime = System.currentTimeMillis();
         long secDiffTime = (afterTime - beforeTime)/10000L;
         System.out.println(secDiffTime);
-         */
+
     }
 
     @Test
@@ -101,7 +82,7 @@ public class ETET {
 
     @Test
     public void test2() throws IOException {
-        /*
+
         Socket socket = new Socket("20.194.98.12", 16300);
         OutputStream output = socket.getOutputStream();
 
@@ -116,7 +97,6 @@ public class ETET {
         System.out.println(receivedMsg);
         socket.close();
 
-         */
 
     }
 
@@ -149,6 +129,8 @@ public class ETET {
         }
 
     }
+
+     */
 
 
 }
