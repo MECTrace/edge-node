@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
+
 import javax.net.ssl.SSLContext;
 import java.nio.file.Paths;
 
@@ -37,7 +39,7 @@ public class WebConfig {
                 .build();
         SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
         HttpClient httpClient = HttpClients.custom()
-                .setSSLHostnameVerifier((hostname, session)->true)
+                .setSSLHostnameVerifier((hostname, session) -> true)
                 .setSSLSocketFactory(socketFactory)
                 .build();
         HttpComponentsClientHttpRequestFactory factory =
@@ -45,5 +47,17 @@ public class WebConfig {
         return new RestTemplate(factory);
 
     }
+
+    @Bean
+    public CommonsRequestLoggingFilter requestLoggingFilter() {
+        CommonsRequestLoggingFilter c = new CommonsRequestLoggingFilter();
+        c.setIncludeHeaders(true);
+        c.setIncludeQueryString(true);
+        c.setIncludePayload(true);
+        c.setIncludeClientInfo(true);
+        c.setMaxPayloadLength(100000);
+        return c;
+    }
+
 
 }

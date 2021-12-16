@@ -43,6 +43,7 @@ public class DataController {
             @RequestParam("signature") MultipartFile[] signatures,
             HttpServletRequest request) throws Exception {
 
+
         log.info("**************** DEVICE DIRECT **************** ");
 
         // 데이터 수신시간 Timestamp

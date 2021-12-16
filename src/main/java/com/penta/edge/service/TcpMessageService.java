@@ -29,15 +29,16 @@ public class TcpMessageService {
         String receivedMsg = new String(message);
         String[] msgArr = receivedMsg.split("::");
 
-
         // 해당 api로 들어오는 source는 모두 edge이기 때문에 "02"붙임
         String sourceId = "02"+ Arrays.stream(EdgeNode.values())
                 .filter(edgeNode -> edgeNode.getIP().equals(msgArr[1].trim()))
                 .findFirst()
                 .orElseThrow().getUUID();
 
+        String dataId = msgArr[4].replace("}]}","").trim();
+
         Hash hash = Hash.builder()
-                .dataId(msgArr[4])
+                .dataId(dataId)
                 .sourceId(sourceId)
                 .destinationId(edgeInfo.getName())
                 .timestamp(receivingTime)
