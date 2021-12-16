@@ -29,7 +29,9 @@ public class TcpMessageService {
         String receivedMsg = new String(message);
         String[] msgArr = receivedMsg.split("::");
 
-        String sourceId = Arrays.stream(EdgeNode.values())
+
+        // 해당 api로 들어오는 source는 모두 edge이기 때문에 "02"붙임
+        String sourceId = "02"+ Arrays.stream(EdgeNode.values())
                 .filter(edgeNode -> edgeNode.getIP().equals(msgArr[1].trim()))
                 .findFirst()
                 .orElseThrow().getUUID();
@@ -47,6 +49,7 @@ public class TcpMessageService {
     }
 
     /* supporter to edge */
+    // central 웹에서 [다운로드]클릭시 호출됨
     public void getDataFromSupporter(byte[] message) {
         /*
         * message format
