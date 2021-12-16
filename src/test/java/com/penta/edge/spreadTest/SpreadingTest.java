@@ -1,23 +1,8 @@
 package com.penta.edge.spreadTest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.penta.edge.domain.Hash;
-import com.penta.edge.domain.MetaData;
 import com.penta.edge.process.EdgeProcess;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
 
 @SpringBootTest
 public class SpreadingTest {
@@ -26,6 +11,7 @@ public class SpreadingTest {
     @Autowired
     EdgeProcess edgeProcess;
 
+    /*
     @Test
     public void sendToControllerTest() {
 
@@ -123,6 +109,8 @@ public class SpreadingTest {
         System.out.println(response);
 
     }
+
+     */
 
 
 
