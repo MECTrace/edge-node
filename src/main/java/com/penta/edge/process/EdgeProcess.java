@@ -113,10 +113,13 @@ public class EdgeProcess {
         // MEMO :: device에서 데이터를 받자마자 central(Auth)로 전송
         sendFilesToCentral(filePath, certfilePath.toString(), metaData, hash);
 
+        // todo : keti연동시 주석 필요
+        sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
+        sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
+
         return edgeNode;
 
-        // sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
-        // sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
+
 
     }
 
