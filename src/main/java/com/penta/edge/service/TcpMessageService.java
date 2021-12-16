@@ -62,11 +62,14 @@ public class TcpMessageService {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         LocalDateTime datetime = LocalDateTime.parse(data[2],formatter);
 
+        /*
+        * sourceID는 무조건 user >> IP 앞에 04 붙임
+        * */
         edgeProcess.saveAndsendDownloadHashToCentral(
                 Hash.builder()
                         .dataId(data[1])
                         .timestamp(datetime)
-                        .sourceId(data[3])
+                        .sourceId("04"+data[3])
                         .destinationId("02"+edgeInfo.getName())
                         .build()
         );
