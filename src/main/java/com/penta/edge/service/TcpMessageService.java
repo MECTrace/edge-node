@@ -69,8 +69,8 @@ public class TcpMessageService {
                 Hash.builder()
                         .dataId(data[1])
                         .timestamp(datetime)
-                        .sourceId("04"+data[3])
-                        .destinationId("02"+edgeInfo.getName())
+                        .sourceId("02"+edgeInfo.getName())
+                        .destinationId("04"+data[3])
                         .build()
         );
     }
