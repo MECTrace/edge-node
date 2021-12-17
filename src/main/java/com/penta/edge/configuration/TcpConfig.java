@@ -18,8 +18,6 @@ public class TcpConfig {
     private int tcpServerPort;
 
 
-
-
     @Bean
     public AbstractServerConnectionFactory connectionFactory() {
         CustomTcpSerializer customTcpSerializer = new CustomTcpSerializer();

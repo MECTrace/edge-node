@@ -175,7 +175,7 @@ public class DataController {
 
         ResponseEntity<String> response = edgeProcess.sendHashToCentral(Hash.builder()
                 .sourceId(clientip)
-                .destinationId(edgeInfo.getName())
+                .destinationId(edgeInfo.getUuid())
                 .dataId(dataid)
                 .timestamp(downloadtime)
                 .build());
