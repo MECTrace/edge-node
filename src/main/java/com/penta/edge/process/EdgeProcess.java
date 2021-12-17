@@ -114,8 +114,8 @@ public class EdgeProcess {
         sendFilesToCentral(filePath, certfilePath.toString(), metaData, hash);
 
         // todo : keti연동시 주석 필요
-        // sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
-        // sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
+        sendToEdge(edgeNode[0], filePath, certfilePath.toString(), metaData, hash);
+        sendToEdge(edgeNode[1], filePath, certfilePath.toString(), metaData, hash);
 
         return edgeNode;
 

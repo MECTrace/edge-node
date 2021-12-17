@@ -145,8 +145,10 @@ public class DataController {
                 //TODO :: keti안돼서 direct 전송. edgeProcess안에 포함되어있음. keti 연동시 주석 해제하고 process안에 sendToEdge하는 부분 주석처리 필요
                 // 파일, DB저장 후 KETI Socket 통신
 
+                /*
                 edgeProcess.sendToEdge(fileHash, targetEdges[0]);
                 edgeProcess.sendToEdge(fileHash, targetEdges[1]);
+                 */
 
 
 
