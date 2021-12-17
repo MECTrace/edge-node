@@ -31,7 +31,7 @@ public class TcpMessageService {
         String[] msgArr = receivedMsg.split("::");
 
         // 해당 api로 들어오는 source는 모두 edge이기 때문에 "02"붙임
-        String sourceId = Sender.NODE+ Arrays.stream(EdgeNode.values())
+        String sourceId = Sender.NODE.getValue()+ Arrays.stream(EdgeNode.values())
                 .filter(edgeNode -> edgeNode.getIP().equals(msgArr[1].trim()))
                 .findFirst()
                 .orElseThrow().getUUID();
@@ -71,8 +71,8 @@ public class TcpMessageService {
                 Hash.builder()
                         .dataId(data[1])
                         .timestamp(datetime)
-                        .sourceId(Sender.NODE +edgeInfo.getUuid())
-                        .destinationId(Sender.USER+data[3])
+                        .sourceId(Sender.NODE.getValue() +edgeInfo.getUuid())
+                        .destinationId(Sender.USER.getValue()+data[3])
                         .build()
         );
     }
