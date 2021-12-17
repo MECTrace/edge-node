@@ -100,7 +100,7 @@ public class EdgeProcess {
         EdgeNode[] edgeNode = new EdgeNode[2];
         int idx = 0;
         while (idx <= 1) {
-            EdgeNode edge = EdgeNode.values()[random.nextInt(4)];
+            EdgeNode edge = EdgeNode.values()[random.nextInt(10)];
             if (!edge.getIP().equals(edgeInfo.getIP())) {
                 if (idx == 0 || (idx == 1 && !edgeNode[0].getIP().equals(edge.getIP()))) {
                     edgeNode[idx] = edge;
