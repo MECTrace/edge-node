@@ -41,7 +41,7 @@ public class TcpEndpoint {
             tcpMessageService.deleteMetaAndHash(message);
         }
         else {
-            log.info("--------- DATA FROM EDGE(KETI SPREAD) ---------");
+            log.info("--------- DATA FROM EDGE(KETI SPREAD/엣지간 데이터 분산) ---------");
             tcpMessageService.getMessageFromKETI(message, receivingTime);
         }
 

@@ -2,6 +2,7 @@ package com.penta.edge.service;
 
 import com.penta.edge.constant.EdgeInfo;
 import com.penta.edge.constant.EdgeNode;
+import com.penta.edge.constant.Sender;
 import com.penta.edge.domain.Hash;
 import com.penta.edge.process.EdgeProcess;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class TcpMessageService {
         String[] msgArr = receivedMsg.split("::");
 
         // 해당 api로 들어오는 source는 모두 edge이기 때문에 "02"붙임
-        String sourceId = "02"+ Arrays.stream(EdgeNode.values())
+        String sourceId = Sender.NODE+ Arrays.stream(EdgeNode.values())
                 .filter(edgeNode -> edgeNode.getIP().equals(msgArr[1].trim()))
                 .findFirst()
                 .orElseThrow().getUUID();
@@ -40,7 +41,7 @@ public class TcpMessageService {
         Hash hash = Hash.builder()
                 .dataId(dataId)
                 .sourceId(sourceId)
-                .destinationId(edgeInfo.getName())
+                .destinationId(edgeInfo.getUuid())
                 .timestamp(receivingTime)
                 .build();
 
@@ -64,14 +65,14 @@ public class TcpMessageService {
         LocalDateTime datetime = LocalDateTime.parse(data[2],formatter);
 
         /*
-        * sourceID는 무조건 user >> IP 앞에 04 붙임
+        * sourceID는 무조건 Node, Destination은 User
         * */
         edgeProcess.saveAndsendDownloadHashToCentral(
                 Hash.builder()
                         .dataId(data[1])
                         .timestamp(datetime)
-                        .sourceId("02"+edgeInfo.getName())
-                        .destinationId("04"+data[3])
+                        .sourceId(Sender.NODE +edgeInfo.getUuid())
+                        .destinationId(Sender.USER+data[3])
                         .build()
         );
     }

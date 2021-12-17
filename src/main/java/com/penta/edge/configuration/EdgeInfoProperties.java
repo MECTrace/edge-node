@@ -11,8 +11,8 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @RequiredArgsConstructor
 public class EdgeInfoProperties {
 
-    // jar 배포시 배포 옵션으로 properties값을 변경하여 각 edge에 맞는 name(uuid)과 ip를 할당하기 위함
-    private final String name;
+    // jar 배포시 배포 옵션으로 properties값을 변경하여 각 edge에 맞는 uuid와 ip를 할당하기 위함
+    private final String uuid;
     private final String ip;
 
 }

@@ -81,7 +81,7 @@ public class EdgeProcess {
         Hash hash = Hash.builder()
                 .sourceId(Sender.VEHICLE.getValue() + pubKeyEncoded)           // 데이터 파일 송신자
                 .dataId(metaData.getDataId())                                // 데이터 파일의 해시값
-                .destinationId(Sender.NODE.getValue() + edgeInfo.getName())  // 데이터 파일 수신자
+                .destinationId(Sender.NODE.getValue() + edgeInfo.getUuid())  // 데이터 파일 수신자
                 .timestamp(receivingTime)                                    // 수신 시간
                 .build();
         hashService.save(hash);
@@ -186,7 +186,7 @@ public class EdgeProcess {
         Hash hash = Hash.builder()
                 .sourceId(Sender.NODE.getValue() + uuid)                     // 데이터 파일 송신자
                 .dataId(metaData.getDataId())                                // 데이터 파일의 해시값
-                .destinationId(Sender.NODE.getValue() + edgeInfo.getName())  // 데이터 파일 수신자
+                .destinationId(Sender.NODE.getValue() + edgeInfo.getUuid())  // 데이터 파일 수신자
                 .timestamp(receivingTime)                                    // 수신 시간
                 .build();
 
@@ -228,7 +228,7 @@ public class EdgeProcess {
         header.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> body = convertObjectToMultiValueMap(metaData, hash);
-        body.add("uuid", edgeInfo.getName());
+        body.add("uuid", edgeInfo.getUuid());
         body.add("datafile", new FileSystemResource(dataFilePath));
         body.add("certfile", new FileSystemResource(certFilePath));
 
